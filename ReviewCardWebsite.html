@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartes IT - Apprentissage Informatique</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            min-height: 600px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            opacity: 0.8;
+            font-size: 14px;
+        }
+
+        .categories {
+            padding: 20px;
+        }
+
+        .category-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            margin: 10px 0;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .category-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+        }
+
+        .category-btn.protocols { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .category-btn.network { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .category-btn.windows { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+        .category-btn.linux { background: linear-gradient(135deg, #27ae60, #229954); }
+        .category-btn.security { background: linear-gradient(135deg, #e67e22, #d35400); }
+        .category-btn.vmware { background: linear-gradient(135deg, #3498db, #2c3e50); }
+        .category-btn.storage { background: linear-gradient(135deg, #9b59b6, #2c3e50); }
+        .category-btn.custom { background: linear-gradient(135deg, #f39c12, #e67e22); }
+
+        .card-container {
+            display: none;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card {
+            width: 100%;
+            height: 300px;
+            position: relative;
+            margin: 20px auto;
+            perspective: 1000px;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .card-front h2 {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .card-front p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .card-back h3 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .card-back p {
+            font-size: 14px;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        .card-back .port {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffeb3b;
+        }
+
+        .controls {
+            padding: 20px;
+            display: none;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .btn.secondary {
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+        }
+
+        .progress {
+            margin: 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .card-counter {
+            text-align: center;
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: none;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .card-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            margin: 8px 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .card-item:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .card-item.selected {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .card-item.selected .add-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        .card-item.selected .add-btn:before {
+            content: "−";
+        }
+
+        .card-info {
+            flex: 1;
+            margin-left: 12px;
+        }
+
+        .card-name {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 4px;
+        }
+
+        .card-category {
+            font-size: 12px;
+            color: #7f8c8d;
+            background: #ecf0f1;
+            padding: 2px 8px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        .add-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .add-btn:before {
+            content: "+";
+        }
+
+        .add-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Cartes IT</h1>
+            <p>Apprenez l'informatique avec des cartes interactives</p>
+        </div>
+
+        <div id="home-view">
+            <div class="categories">
+                <button class="category-btn protocols" onclick="selectCategory('protocols')">
+                    🌐 Protocoles Réseau
+                    <span>→</span>
+                </button>
+                <button class="category-btn network" onclick="selectCategory('network')">
+                    🔗 Réseaux
+                    <span>→</span>
+                </button>
+                <button class="category-btn windows" onclick="selectCategory('windows')">
+                    🪟 Windows
+                    <span>→</span>
+                </button>
+                <button class="category-btn linux" onclick="selectCategory('linux')">
+                    🐧 Linux
+                    <span>→</span>
+                </button>
+                <button class="category-btn security" onclick="selectCategory('security')">
+                    🔒 Sécurité
+                    <span>→</span>
+                </button>
+                <button class="category-btn vmware" onclick="selectCategory('vmware')">
+                    ☁️ VMware
+                    <span>→</span>
+                </button>
+                <button class="category-btn storage" onclick="selectCategory('storage')">
+                    💾 Stockage
+                    <span>→</span>
+                </button>
+                <button class="category-btn custom" onclick="showCustomManager()">
+                    ⭐ Liste Personnalisée
+                    <span>→</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="card-view" style="display: none;">
+            <button class="back-btn" onclick="goHome()">← Retour</button>
+            
+            <div class="card-counter" id="counter"></div>
+            <div class="progress" id="progress">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+
+            <div class="card" id="flashcard" onclick="flipCard()">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <h2 id="card-question">SSH</h2>
+                        <p>Cliquez pour voir la réponse</p>
+                    </div>
+                    <div class="card-back">
+                        <div class="port" id="card-port">Port 22</div>
+                        <h3 id="card-title">Secure Shell</h3>
+                        <p id="card-answer">Protocole de communication sécurisé permettant de se connecter à distance à un serveur via un tunnel chiffré.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="controls" id="controls">
+                <button class="btn" onclick="nextCard()">Carte Suivante</button>
+                <button class="btn secondary" onclick="shuffleCards()">🔀 Mélanger</button>
+                <button class="btn secondary" onclick="resetProgress()">🔄 Recommencer</button>
+            </div>
+        </div>
+
+        <div id="custom-manager" style="display: none;">
+            <button class="back-btn" onclick="goHome()">← Retour</button>
+            
+            <div style="padding: 20px;">
+                <h2 style="text-align: center; margin-bottom: 20px; color: #2c3e50;">Gestionnaire de Liste Personnalisée</h2>
+                
+                <div class="custom-stats" style="background: #ecf0f1; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center;">
+                    <p style="color: #2c3e50; font-weight: bold;" id="custom-count">0 cartes sélectionnées</p>
+                </div>
+
+                <div class="custom-actions" style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <button class="btn" onclick="startCustomStudy()" id="start-study-btn" style="flex: 1;" disabled>
+                        🎓 Commencer l'étude
+                    </button>
+                    <button class="btn secondary" onclick="clearCustomList()" style="flex: 1;">
+                        🗑️ Vider la liste
+                    </button>
+                </div>
+
+                <div class="category-filter" style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 10px; color: #2c3e50; font-weight: bold;">Filtrer par catégorie :</label>
+                    <select id="category-filter" onchange="filterByCategory()" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #bdc3c7;">
+                        <option value="all">Toutes les catégories</option>
+                        <option value="protocols">Protocoles</option>
+                        <option value="network">Réseaux</option>
+                        <option value="windows">Windows</option>
+                        <option value="linux">Linux</option>
+                        <option value="security">Sécurité</option>
+                        <option value="vmware">VMware</option>
+                        <option value="storage">Stockage</option>
+                    </select>
+                </div>
+
+                <div class="search-box" style="margin-bottom: 20px;">
+                    <input type="text" id="search-input" placeholder="🔍 Rechercher une carte..." 
+                           style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #bdc3c7; font-size: 16px;"
+                           onkeyup="searchCards()">
+                </div>
+
+                <div class="cards-browser" id="cards-browser" style="max-height: 400px; overflow-y: auto;">
+                    <!-- Les cartes seront générées ici -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const cardData = {
+            protocols: [
+                { question: "SSH", port: "Port 22", title: "Secure Shell", answer: "Protocole de communication sécurisé permettant de se connecter à distance à un serveur via un tunnel chiffré." },
+                { question: "HTTP", port: "Port 80", title: "HyperText Transfer Protocol", answer: "Protocole de communication client-serveur pour le transfert de données sur le Web." },
+                { question: "HTTPS", port: "Port 443", title: "HTTP Secure", answer: "Version sécurisée de HTTP utilisant le chiffrement SSL/TLS pour protéger les données." },
+                { question: "FTP", port: "Port 21", title: "File Transfer Protocol", answer: "Protocole de transfert de fichiers entre un client et un serveur sur un réseau." },
+                { question: "SMTP", port: "Port 25", title: "Simple Mail Transfer Protocol", answer: "Protocole pour l'envoi d'emails entre serveurs de messagerie." },
+                { question: "DNS", port: "Port 53", title: "Domain Name System", answer: "Service de résolution de noms de domaine en adresses IP." },
+                { question: "DHCP", port: "Port 67/68", title: "Dynamic Host Configuration Protocol", answer: "Protocole d'attribution automatique d'adresses IP et de configuration réseau." },
+                { question: "APIPA", port: "169.254.x.x", title: "Automatic Private IP Addressing", answer: "Attribution automatique d'adresse IP privée quand aucun serveur DHCP n'est disponible." },
+                { question: "L2TP", port: "Port 1701", title: "Layer 2 Tunneling Protocol", answer: "Protocole de tunneling pour créer des connexions VPN au niveau liaison de données." },
+                { question: "L2TPv3", port: "Port 1701", title: "L2TP Version 3", answer: "Version étendue de L2TP supportant différents types de circuits virtuels." },
+                { question: "LDAP", port: "Port 389", title: "Lightweight Directory Access Protocol", answer: "Protocole d'accès aux services d'annuaire pour interroger et modifier les entrées." },
+                { question: "LDAPS", port: "Port 636", title: "LDAP over SSL", answer: "Version sécurisée de LDAP utilisant le chiffrement SSL/TLS." },
+                { question: "LCP", port: "PPP", title: "Link Control Protocol", answer: "Protocole de contrôle de liaison pour établir et configurer les connexions PPP." },
+                { question: "LLMNR", port: "Port 5355", title: "Link-Local Multicast Name Resolution", answer: "Protocole Microsoft de résolution de noms sur les réseaux locaux." },
+                { question: "PPTP", port: "Port 1723", title: "Point-to-Point Tunneling Protocol", answer: "Protocole VPN Microsoft créant des tunnels sécurisés sur Internet." },
+                { question: "POP3", port: "Port 110", title: "Post Office Protocol v3", answer: "Protocole de réception d'emails téléchargeant les messages sur le client." },
+                { question: "IMAP4", port: "Port 143", title: "Internet Message Access Protocol v4", answer: "Protocole de messagerie permettant l'accès aux emails stockés sur le serveur." },
+                { question: "PAP", port: "PPP", title: "Password Authentication Protocol", answer: "Protocole d'authentification simple transmettant les mots de passe en clair." },
+                { question: "PPPoE", port: "Couche 2", title: "PPP over Ethernet", answer: "Encapsulation du protocole PPP dans des trames Ethernet pour l'accès haut débit." },
+                { question: "UPnP", port: "Port 1900", title: "Universal Plug and Play", answer: "Ensemble de protocoles pour la découverte automatique de périphériques réseau." },
+                { question: "WAP", port: "Variable", title: "Wireless Application Protocol", answer: "Protocole pour accéder à Internet depuis des appareils mobiles sans fil." },
+                { question: "RTMP", port: "Port 1935", title: "Real-Time Messaging Protocol", answer: "Protocole Adobe pour le streaming audio, vidéo et données en temps réel." },
+                { question: "RTCP", port: "Pair RTP", title: "Real-Time Control Protocol", answer: "Protocole de contrôle pour monitorer la qualité des transmissions RTP." },
+                { question: "RPC", port: "Port 135", title: "Remote Procedure Call", answer: "Protocole permettant d'exécuter des procédures sur des machines distantes." },
+                { question: "SRTP", port: "Variable", title: "Secure Real-time Transport Protocol", answer: "Version sécurisée de RTP avec chiffrement pour les communications multimédia." },
+                { question: "SSTP", port: "Port 443", title: "Secure Socket Tunneling Protocol", answer: "Protocole VPN Microsoft utilisant HTTPS pour créer des tunnels sécurisés." },
+                { question: "SNMP", port: "Port 161", title: "Simple Network Management Protocol", answer: "Protocole de gestion et surveillance des équipements réseau." },
+                { question: "SIP", port: "Port 5060", title: "Session Initiation Protocol", answer: "Protocole de signalisation pour établir des sessions de communication multimédia." },
+                { question: "NTP", port: "Port 123", title: "Network Time Protocol", answer: "Protocole de synchronisation d'horloge sur les réseaux informatiques." },
+                { question: "NFS", port: "Port 2049", title: "Network File System", answer: "Système de fichiers distribué permettant l'accès à distance aux fichiers." },
+                { question: "Kerberos", port: "Port 88", title: "Kerberos", answer: "Protocole d'authentification réseau utilisant des tickets pour sécuriser les communications." },
+                { question: "NTLM", port: "Authentification", title: "NT LAN Manager", answer: "Protocole d'authentification Microsoft pour les réseaux Windows." },
+                { question: "NetBIOS", port: "Port 137-139", title: "Network Basic Input/Output System", answer: "API permettant aux applications de communiquer sur un réseau local." },
+                { question: "PDP", port: "Mobile", title: "Packet Data Protocol", answer: "Protocole de transmission de données par paquets dans les réseaux mobiles." }
+            ],
+            network: [
+                { question: "TCP", port: "Couche 4", title: "Transmission Control Protocol", answer: "Protocole de transport fiable avec contrôle de flux et détection d'erreurs." },
+                { question: "UDP", port: "Couche 4", title: "User Datagram Protocol", answer: "Protocole de transport rapide sans garantie de livraison, utilisé pour le streaming." },
+                { question: "IP", port: "Couche 3", title: "Internet Protocol", answer: "Protocole de routage des paquets de données à travers les réseaux." },
+                { question: "ARP", port: "Couche 2", title: "Address Resolution Protocol", answer: "Protocole pour associer une adresse IP à une adresse MAC sur un réseau local." },
+                { question: "VLAN", port: "Couche 2", title: "Virtual Local Area Network", answer: "Segmentation logique d'un réseau physique en plusieurs réseaux virtuels." },
+                { question: "CDP", port: "Couche 2", title: "Cisco Discovery Protocol", answer: "Protocole propriétaire Cisco pour découvrir les équipements réseau adjacents." },
+                { question: "DTP", port: "Couche 2", title: "Dynamic Trunk Protocol", answer: "Protocole Cisco pour négocier automatiquement les liens trunk entre switches." },
+                { question: "HSRP", port: "UDP 1985", title: "Hot Standby Router Protocol", answer: "Protocole Cisco de redondance pour assurer la haute disponibilité des routeurs." },
+                { question: "LLDP", port: "Couche 2", title: "Link Layer Discovery Protocol", answer: "Protocole standard pour découvrir les équipements réseau voisins." },
+                { question: "MPLS", port: "Couche 2.5", title: "Multiprotocol Label Switching", answer: "Technique de commutation par étiquettes pour optimiser le routage réseau." },
+                { question: "NAT", port: "Couche 3", title: "Network Address Translation", answer: "Traduction d'adresses réseau pour partager une IP publique entre plusieurs machines." },
+                { question: "PAT", port: "Couche 3", title: "Port Address Translation", answer: "Extension de NAT utilisant les ports pour multiplexer les connexions." },
+                { question: "OUI", port: "Adresse MAC", title: "Organizationally Unique Identifier", answer: "Identifiant unique de 3 octets attribué aux fabricants d'équipements réseau." },
+                { question: "PAGP", port: "Agrégation", title: "Port Aggregation Protocol", answer: "Protocole propriétaire Cisco pour agréger plusieurs liens physiques en un lien logique." },
+                { question: "LACP", port: "IEEE 802.3ad", title: "Link Aggregation Control Protocol", answer: "Protocole standard pour agréger plusieurs liens Ethernet en un seul lien logique." },
+                { question: "EIGRP", port: "Routage", title: "Enhanced Interior Gateway Routing Protocol", answer: "Protocole de routage hybride Cisco combinant vecteur distance et état de liens." },
+                { question: "OSPF", port: "Routage", title: "Open Shortest Path First", answer: "Protocole de routage à état de liens utilisant l'algorithme de Dijkstra." },
+                { question: "RIP", port: "Port 520", title: "Routing Information Protocol", answer: "Protocole de routage à vecteur de distance, limité à 15 sauts maximum." },
+                { question: "Router on a Stick", port: "Topologie", title: "Routeur sur bâton", answer: "Configuration utilisant un seul routeur pour router entre VLANs via sous-interfaces." },
+                { question: "Trunk", port: "Liaison", title: "Liaison trunk", answer: "Liaison transportant le trafic de plusieurs VLANs avec étiquetage (802.1Q)." },
+                { question: "Distance Administrative", port: "Routage", title: "Administrative Distance", answer: "Métrique de fiabilité des sources de routage (0=connecté, 1=statique, 110=OSPF)." },
+                { question: "STP", port: "Couche 2", title: "Spanning Tree Protocol", answer: "Protocole prévenant les boucles dans les réseaux commutés redondants." },
+                { question: "RSTP", port: "IEEE 802.1w", title: "Rapid Spanning Tree Protocol", answer: "Version accélérée de STP avec convergence plus rapide." },
+                { question: "PVST+", port: "Cisco", title: "Per-VLAN Spanning Tree Plus", answer: "Implémentation Cisco de STP avec une instance par VLAN." },
+                { question: "VTP", port: "Couche 2", title: "VLAN Trunking Protocol", answer: "Protocole Cisco pour synchroniser la configuration VLAN entre switches." },
+                { question: "Inter-VLAN Routing", port: "Couche 3", title: "Routage inter-VLAN", answer: "Routage du trafic entre différents VLANs via routeur ou switch multicouche." },
+                { question: "Access Port", port: "Switch", title: "Port d'accès", answer: "Port de switch appartenant à un seul VLAN, sans étiquetage." },
+                { question: "Trunk Port", port: "Switch", title: "Port trunk", answer: "Port transportant plusieurs VLANs avec étiquetage 802.1Q ou ISL." },
+                { question: "Native VLAN", port: "Trunking", title: "VLAN natif", answer: "VLAN non étiqueté sur une liaison trunk, par défaut VLAN 1." },
+                { question: "VRRP", port: "Redondance", title: "Virtual Router Redundancy Protocol", answer: "Protocole standard de redondance de routeurs, alternative ouverte à HSRP." },
+                { question: "BGP", port: "Port 179", title: "Border Gateway Protocol", answer: "Protocole de routage externe pour échanger routes entre systèmes autonomes Internet." },
+                { question: "ACL", port: "Sécurité", title: "Access Control List", answer: "Liste de règles filtrant le trafic réseau selon critères définis." },
+                { question: "QoS", port: "Qualité", title: "Quality of Service", answer: "Mécanismes de priorisation du trafic pour garantir qualité de service." },
+                { question: "CoS", port: "Priorité", title: "Class of Service", answer: "Marquage de priorité au niveau couche 2 (802.1p) dans l'en-tête Ethernet." },
+                { question: "DSCP", port: "Priorité", title: "Differentiated Services Code Point", answer: "Marquage QoS dans l'en-tête IP pour classification du trafic." },
+                { question: "EtherChannel", port: "Agrégation", title: "EtherChannel", answer: "Technologie Cisco d'agrégation de liens pour augmenter bande passante et redondance." },
+                { question: "Port Security", port: "Sécurité", title: "Sécurité de port", answer: "Fonctionnalité limitant et contrôlant les adresses MAC sur un port de switch." },
+                { question: "DHCP Snooping", port: "Sécurité", title: "DHCP Snooping", answer: "Fonctionnalité de sécurité filtrant les messages DHCP non autorisés." },
+                { question: "ARP Inspection", port: "Sécurité", title: "Dynamic ARP Inspection", answer: "Protection contre les attaques ARP spoofing en validant les bindings ARP." }
+            ],
+            network: [
+                { question: "TCP", port: "Couche 4", title: "Transmission Control Protocol", answer: "Protocole de transport fiable avec contrôle de flux et détection d'erreurs." },
+                { question: "UDP", port: "Couche 4", title: "User Datagram Protocol", answer: "Protocole de transport rapide sans garantie de livraison, utilisé pour le streaming." },
+                { question: "IP", port: "Couche 3", title: "Internet Protocol", answer: "Protocole de routage des paquets de données à travers les réseaux." },
+                { question: "ARP", port: "Couche 2", title: "Address Resolution Protocol", answer: "Protocole pour associer une adresse IP à une adresse MAC sur un réseau local." },
+                { question: "VLAN", port: "Couche 2", title: "Virtual Local Area Network", answer: "Segmentation logique d'un réseau physique en plusieurs réseaux virtuels." }
+            ],
+            windows: [
+                { question: "CMD", port: "Outil", title: "Invite de commandes", answer: "Interface en ligne de commande pour exécuter des commandes système Windows." },
+                { question: "PowerShell", port: "Outil", title: "Windows PowerShell", answer: "Shell avancé et langage de script pour l'administration système Windows." },
+                { question: "Registry", port: "Base de données", title: "Registre Windows", answer: "Base de données hiérarchique stockant les paramètres de configuration du système." },
+                { question: "Active Directory", port: "Service", title: "AD", answer: "Service d'annuaire Microsoft pour la gestion centralisée des utilisateurs et ressources." },
+                { question: "IIS", port: "Port 80/443", title: "Internet Information Services", answer: "Serveur web Microsoft pour héberger des sites web et applications." },
+                { question: "Group Policy", port: "Gestion", title: "Stratégie de groupe", answer: "Système de configuration centralisée des paramètres utilisateurs et ordinateurs." },
+                { question: "WMI", port: "Gestion", title: "Windows Management Instrumentation", answer: "Infrastructure pour la surveillance et gestion des ressources système Windows." },
+                { question: "Services.msc", port: "Console", title: "Gestionnaire de services", answer: "Console MMC pour gérer les services Windows (démarrage, arrêt, configuration)." },
+                { question: "Event Viewer", port: "Logs", title: "Observateur d'événements", answer: "Outil pour consulter les journaux système, sécurité et applications Windows." },
+                { question: "Task Manager", port: "Outil", title: "Gestionnaire des tâches", answer: "Utilitaire pour surveiller processus, performances et utilisation ressources." },
+                { question: "MSConfig", port: "Configuration", title: "System Configuration", answer: "Outil pour gérer le démarrage système et services Windows." },
+                { question: "Regedit", port: "Éditeur", title: "Éditeur du Registre", answer: "Interface graphique pour modifier manuellement la base de registre Windows." },
+                { question: "WSUS", port: "Port 8530", title: "Windows Server Update Services", answer: "Service de distribution centralisée des mises à jour Microsoft en entreprise." },
+                { question: "Hyper-V", port: "Virtualisation", title: "Hyper-V", answer: "Hyperviseur natif Windows pour créer et gérer des machines virtuelles." },
+                { question: "NTDS", port: "Base AD", title: "NT Directory Services", answer: "Base de données Active Directory stockée dans le fichier ntds.dit." },
+                { question: "Sysprep", port: "Outil", title: "System Preparation", answer: "Outil pour préparer une installation Windows au clonage ou déploiement." },
+                { question: "WDS", port: "Déploiement", title: "Windows Deployment Services", answer: "Service de déploiement d'images Windows via le réseau (PXE boot)." },
+                { question: "SCCM", port: "Gestion", title: "System Center Configuration Manager", answer: "Solution Microsoft de gestion centralisée des postes et serveurs." },
+                { question: "Exchange", port: "Port 25/443", title: "Microsoft Exchange", answer: "Serveur de messagerie Microsoft avec calendrier et collaboration." },
+                { question: "SQL Server", port: "Port 1433", title: "Microsoft SQL Server", answer: "Système de gestion de base de données relationnelle Microsoft." },
+                { question: "IIS Manager", port: "Gestion Web", title: "Gestionnaire IIS", answer: "Console d'administration pour configurer sites web et applications IIS." },
+                { question: "MMC", port: "Console", title: "Microsoft Management Console", answer: "Framework d'administration hébergeant les snap-ins de gestion Windows." },
+                { question: "DCOM", port: "Communication", title: "Distributed COM", answer: "Extension de COM permettant la communication entre objets sur le réseau." },
+                { question: "WinRM", port: "Port 5985/5986", title: "Windows Remote Management", answer: "Service de gestion à distance basé sur les standards WS-Management." },
+                { question: "BITS", port: "Transfert", title: "Background Intelligent Transfer Service", answer: "Service de transfert de fichiers en arrière-plan avec reprise sur interruption." },
+                { question: "DNS Server", port: "Port 53", title: "Serveur DNS Windows", answer: "Rôle Windows Server pour résolution de noms et gestion zones DNS." },
+                { question: "DHCP Server", port: "Port 67", title: "Serveur DHCP Windows", answer: "Rôle distribuant automatiquement adresses IP et configuration réseau." },
+                { question: "File Server", port: "Partage", title: "Serveur de fichiers", answer: "Rôle Windows pour partager fichiers et dossiers sur le réseau." },
+                { question: "Print Server", port: "Impression", title: "Serveur d'impression", answer: "Centralisation et gestion des imprimantes partagées sur le réseau." },
+                { question: "RDS", port: "Bureau distant", title: "Remote Desktop Services", answer: "Services de bureau à distance pour accès multi-utilisateurs aux applications." },
+                { question: "Terminal Server", port: "Port 3389", title: "Serveur de terminaux", answer: "Service permettant l'exécution d'applications sur serveur distant." },
+                { question: "Failover Cluster", port: "Haute dispo", title: "Cluster de basculement", answer: "Groupe de serveurs assurant la continuité de service en cas de panne." },
+                { question: "NLB", port: "Équilibrage", title: "Network Load Balancing", answer: "Répartition de charge réseau entre plusieurs serveurs Windows." },
+                { question: "WSFC", port: "Cluster", title: "Windows Server Failover Clustering", answer: "Technologie de clustering Microsoft pour haute disponibilité des services." },
+                { question: "DFS", port: "Namespace", title: "Distributed File System", answer: "Système de fichiers distribué unifiant l'accès aux partages réseau." },
+                { question: "FSRM", port: "Gestion", title: "File Server Resource Manager", answer: "Outils de gestion, quotas et classification des ressources de stockage." }
+            ],
+            linux: [
+                { question: "chmod", port: "Commande", title: "Change Mode", answer: "Commande pour modifier les permissions d'accès aux fichiers et dossiers." },
+                { question: "grep", port: "Commande", title: "Global Regular Expression Print", answer: "Outil de recherche de texte utilisant des expressions régulières." },
+                { question: "crontab", port: "Service", title: "Cron Table", answer: "Système de planification de tâches automatiques sous Unix/Linux." },
+                { question: "systemctl", port: "Commande", title: "System Control", answer: "Commande pour gérer les services système avec systemd." },
+                { question: "sudo", port: "Commande", title: "Substitute User Do", answer: "Permet d'exécuter des commandes avec les privilèges d'un autre utilisateur." },
+                { question: "iptables", port: "Pare-feu", title: "IP Tables", answer: "Outil de configuration du pare-feu Linux pour filtrer les paquets réseau." },
+                { question: "ssh-keygen", port: "Sécurité", title: "SSH Key Generator", answer: "Utilitaire pour générer des paires de clés publique/privée SSH." },
+                { question: "rsync", port: "Synchronisation", title: "Remote Sync", answer: "Outil de synchronisation et sauvegarde de fichiers locale ou distante." },
+                { question: "tar", port: "Archive", title: "Tape Archive", answer: "Utilitaire d'archivage pour créer et extraire des archives de fichiers." },
+                { question: "vi/vim", port: "Éditeur", title: "Vi Improved", answer: "Éditeur de texte modal puissant disponible sur tous les systèmes Unix/Linux." },
+                { question: "bash", port: "Shell", title: "Bourne Again Shell", answer: "Shell par défaut sur la plupart des distributions Linux avec scripting avancé." },
+                { question: "ps", port: "Processus", title: "Process Status", answer: "Commande affichant les processus en cours d'exécution sur le système." },
+                { question: "top", port: "Monitoring", title: "Table of Processes", answer: "Moniteur temps réel de l'utilisation CPU, mémoire et processus actifs." },
+                { question: "htop", port: "Monitoring", title: "Interactive Process Viewer", answer: "Version améliorée de top avec interface colorée et interactive." },
+                { question: "netstat", port: "Réseau", title: "Network Statistics", answer: "Affiche les connexions réseau, tables de routage et statistiques interfaces." },
+                { question: "ss", port: "Réseau", title: "Socket Statistics", answer: "Remplaçant moderne de netstat pour afficher les sockets réseau." },
+                { question: "lsof", port: "Fichiers", title: "List Open Files", answer: "Affiche les fichiers ouverts par les processus et utilisateurs." },
+                { question: "mount", port: "Système fichiers", title: "Mount", answer: "Commande pour monter des systèmes de fichiers dans l'arborescence." },
+                { question: "fdisk", port: "Partitioning", title: "Fixed Disk", answer: "Utilitaire de partitionnement des disques durs sous Linux." },
+                { question: "LVM", port: "Stockage", title: "Logical Volume Manager", answer: "Gestionnaire de volumes logiques pour gestion flexible du stockage." },
+                { question: "systemd", port: "Init", title: "System Daemon", answer: "Système d'initialisation moderne gérant services, montages et événements." },
+                { question: "journalctl", port: "Logs", title: "Journal Control", answer: "Commande pour consulter les logs du journal systemd." },
+                { question: "SELinux", port: "Sécurité", title: "Security-Enhanced Linux", answer: "Module de sécurité Linux implémentant contrôle d'accès obligatoire." },
+                { question: "AppArmor", port: "Sécurité", title: "Application Armor", answer: "Système de sécurité Linux limitant les capacités des programmes." },
+                { question: "ufw", port: "Pare-feu", title: "Uncomplicated Firewall", answer: "Interface simplifiée pour configurer le pare-feu iptables sous Ubuntu." },
+                { question: "Apache", port: "Port 80/443", title: "Apache HTTP Server", answer: "Serveur web open source le plus utilisé au monde." },
+                { question: "Nginx", port: "Port 80/443", title: "Engine X", answer: "Serveur web haute performance et proxy inverse très efficace." },
+                { question: "MySQL", port: "Port 3306", title: "My Structured Query Language", answer: "Système de gestion de base de données relationnelle open source." },
+                { question: "PostgreSQL", port: "Port 5432", title: "Post-gres SQL", answer: "SGBD relationnel objet avancé avec conformité SQL étendue." },
+                { question: "Docker", port: "Conteneurs", title: "Docker Engine", answer: "Plateforme de conteneurisation pour déployer applications dans des environnements isolés." },
+                { question: "Kubernetes", port: "Orchestration", title: "K8s", answer: "Orchestrateur de conteneurs pour automatiser déploiement, mise à l'échelle et gestion." },
+                { question: "Git", port: "Versioning", title: "Git Version Control", answer: "Système de contrôle de version distribué pour gérer le code source." },
+                { question: "Shell Script", port: "Scripting", title: "Script Shell", answer: "Scripts exécutables pour automatiser tâches et administration système Linux." },
+                { question: "Package Manager", port: "Gestion", title: "Gestionnaire de paquets", answer: "Outil pour installer, mettre à jour et supprimer logiciels (apt, yum, dnf)." },
+                { question: "Repository", port: "Dépôt", title: "Dépôt de paquets", answer: "Serveur contenant les paquets logiciels d'une distribution Linux." },
+                { question: "Kernel", port: "Noyau", title: "Noyau Linux", answer: "Cœur du système d'exploitation gérant matériel et ressources système." },
+                { question: "Init System", port: "Initialisation", title: "Système d'init", answer: "Premier processus lancé au démarrage gérant tous les autres services." },
+                { question: "Load Average", port: "Performance", title: "Charge système", answer: "Métrique indiquant la charge moyenne du système sur 1, 5 et 15 minutes." },
+                { question: "Swap", port: "Mémoire", title: "Espace d'échange", answer: "Espace disque utilisé comme extension de la mémoire vive." },
+                { question: "File Permissions", port: "Sécurité", title: "Permissions fichiers", answer: "Système de droits d'accès Unix (lecture, écriture, exécution) par utilisateur/groupe." },
+                { question: "Inode", port: "Système fichiers", title: "Index Node", answer: "Structure de données contenant métadonnées d'un fichier (permissions, dates, taille)." }
+            ],
+            security: [
+                { question: "SSL/TLS", port: "Protocole", title: "Secure Sockets Layer", answer: "Protocoles de chiffrement pour sécuriser les communications réseau." },
+                { question: "Firewall", port: "Sécurité", title: "Pare-feu", answer: "Système de protection réseau filtrant le trafic selon des règles prédéfinies." },
+                { question: "VPN", port: "Réseau", title: "Virtual Private Network", answer: "Réseau privé virtuel créant un tunnel sécurisé sur Internet." },
+                { question: "2FA", port: "Authentification", title: "Two-Factor Authentication", answer: "Méthode d'authentification utilisant deux facteurs différents pour plus de sécurité." },
+                { question: "Hash", port: "Cryptographie", title: "Fonction de hachage", answer: "Fonction mathématique convertissant des données en empreinte numérique unique." },
+                { question: "IPSec", port: "Couche 3", title: "Internet Protocol Security", answer: "Suite de protocoles pour sécuriser les communications IP par chiffrement et authentification." },
+                { question: "SSL VPN", port: "Port 443", title: "SSL Virtual Private Network", answer: "VPN utilisant le protocole SSL/TLS pour sécuriser les connexions distantes." },
+                { question: "IEEE 802.1AE", port: "Couche 2", title: "MACsec", answer: "Standard de chiffrement au niveau liaison de données pour sécuriser les trames Ethernet." },
+                { question: "Kerberos", port: "Port 88", title: "Kerberos", answer: "Protocole d'authentification réseau utilisant des tickets pour sécuriser les communications." },
+                { question: "NTLM", port: "Authentification", title: "NT LAN Manager", answer: "Protocole d'authentification Microsoft pour les réseaux Windows." },
+                { question: "C2C", port: "Variable", title: "Client-To-Client Protocol", answer: "Protocole permettant la communication directe entre clients sans serveur intermédiaire." }
+            ],
+            vmware: [
+                { question: "vSphere", port: "Plateforme", title: "VMware vSphere", answer: "Suite de virtualisation complète incluant ESXi et vCenter pour gérer l'infrastructure virtuelle." },
+                { question: "ESXi", port: "Hyperviseur", title: "Elastic Sky X Integrated", answer: "Hyperviseur bare-metal de type 1 qui s'installe directement sur le serveur physique." },
+                { question: "vCenter", port: "Gestion", title: "vCenter Server", answer: "Serveur de gestion centralisée pour administrer multiple hôtes ESXi et machines virtuelles." },
+                { question: "VM", port: "Machine", title: "Virtual Machine", answer: "Machine virtuelle émulant un ordinateur complet avec son propre OS et applications." },
+                { question: "Hyperviseur", port: "Type 1/2", title: "Hypervisor", answer: "Logiciel permettant de créer et gérer des machines virtuelles sur un hôte physique." },
+                { question: "vMotion", port: "Migration", title: "VMware vMotion", answer: "Migration à chaud de VMs entre hôtes ESXi sans interruption de service." },
+                { question: "HA", port: "Disponibilité", title: "High Availability", answer: "Redémarrage automatique des VMs sur d'autres hôtes en cas de panne matérielle." },
+                { question: "DRS", port: "Équilibrage", title: "Distributed Resource Scheduler", answer: "Équilibrage automatique des charges entre hôtes ESXi dans un cluster." },
+                { question: "Snapshot", port: "Sauvegarde", title: "Instantané", answer: "Capture de l'état d'une VM à un moment donné pour restauration rapide." },
+                { question: "Clone", port: "Copie", title: "Clonage", answer: "Création d'une copie complète d'une VM existante avec un nouvel identifiant." },
+                { question: "Template", port: "Modèle", title: "Modèle VM", answer: "Image maître d'une VM servant de base pour créer rapidement de nouvelles VMs." },
+                { question: "vSAN", port: "Stockage", title: "Virtual Storage Area Network", answer: "Solution de stockage software-defined intégrée dans vSphere." },
+                { question: "Datastore", port: "Stockage", title: "Magasin de données", answer: "Espace de stockage logique où sont stockés les fichiers des machines virtuelles." },
+                { question: "VMFS", port: "Système fichiers", title: "Virtual Machine File System", answer: "Système de fichiers en cluster optimisé pour les machines virtuelles VMware." },
+                { question: "vNIC", port: "Réseau", title: "Virtual Network Interface Card", answer: "Carte réseau virtuelle connectée à un switch virtuel dans l'hyperviseur." },
+                { question: "vSwitch", port: "Réseau", title: "Virtual Switch", answer: "Commutateur virtuel gérant le trafic réseau entre VMs et réseau physique." },
+                { question: "Port Group", port: "Réseau", title: "Groupe de ports", answer: "Ensemble de ports virtuels partageant les mêmes politiques réseau." },
+                { question: "VLAN", port: "Réseau", title: "Virtual LAN", answer: "Segmentation logique du réseau au niveau des switches virtuels et physiques." },
+                { question: "Resource Pool", port: "Ressources", title: "Pool de ressources", answer: "Regroupement logique de ressources CPU et mémoire avec allocation définie." },
+                { question: "Affinity Rule", port: "Placement", title: "Règle d'affinité", answer: "Règle définissant où les VMs doivent ou ne doivent pas s'exécuter." },
+                { question: "Fault Tolerance", port: "Tolérance", title: "FT", answer: "Protection continue avec VM secondaire synchrone pour zéro temps d'arrêt." },
+                { question: "vApp", port: "Application", title: "Virtual Application", answer: "Conteneur logique regroupant plusieurs VMs formant une application complète." },
+                { question: "OVF", port: "Format", title: "Open Virtualization Format", answer: "Format standard pour l'empaquetage et la distribution de machines virtuelles." },
+                { question: "vCPU", port: "Processeur", title: "Virtual CPU", answer: "Processeur virtuel alloué à une VM, mappé sur les cœurs physiques." },
+                { question: "Memory Balloon", port: "Mémoire", title: "Ballon mémoire", answer: "Technique de récupération dynamique de mémoire inutilisée dans les VMs." },
+                { question: "TPS", port: "Mémoire", title: "Transparent Page Sharing", answer: "Déduplication automatique des pages mémoire identiques entre VMs." },
+                { question: "VMDK", port: "Fichier", title: "Virtual Machine Disk", answer: "Format de fichier VMware pour les disques virtuels des machines virtuelles." },
+                { question: "Thick Provision", port: "Stockage", title: "Provisionnement épais", answer: "Allocation immédiate de tout l'espace disque lors de la création de la VM." },
+                { question: "Thin Provision", port: "Stockage", title: "Provisionnement léger", answer: "Allocation dynamique de l'espace disque selon l'utilisation réelle de la VM." },
+                { question: "Hot Add", port: "Extension", title: "Ajout à chaud", answer: "Ajout de ressources (CPU, mémoire, disque) sans arrêter la machine virtuelle." },
+                { question: "CBT", port: "Sauvegarde", title: "Changed Block Tracking", answer: "Technologie de suivi des blocs modifiés pour optimiser les sauvegardes." },
+                { question: "Storage vMotion", port: "Migration", title: "Storage vMotion", answer: "Migration des disques virtuels entre datastores sans interruption de la VM." },
+                { question: "Admission Control", port: "Contrôle", title: "Contrôle d'admission", answer: "Politique garantissant les ressources nécessaires en cas de panne d'hôte." },
+                { question: "VMware Tools", port: "Pilotes", title: "VMware Tools", answer: "Suite de pilotes et utilitaires optimisant les performances des VMs." }
+            ],
+            storage: [
+                { question: "NAS", port: "Réseau", title: "Network Attached Storage", answer: "Stockage en réseau accessible via protocoles de partage de fichiers (NFS, CIFS)." },
+                { question: "SAN", port: "Réseau", title: "Storage Area Network", answer: "Réseau dédié haute performance connectant serveurs et systèmes de stockage." },
+                { question: "DAS", port: "Direct", title: "Direct Attached Storage", answer: "Stockage directement connecté à un serveur via SCSI, SATA ou SAS." },
+                { question: "MBR", port: "Partition", title: "Master Boot Record", answer: "Table de partitionnement traditionnelle limitée à 4 partitions primaires et 2TB." },
+                { question: "GPT", port: "Partition", title: "GUID Partition Table", answer: "Table de partitionnement moderne supportant plus de 4 partitions et disques >2TB." },
+                { question: "NTFS", port: "Système fichiers", title: "New Technology File System", answer: "Système de fichiers Windows avec journalisation, permissions et chiffrement." },
+                { question: "FAT32", port: "Système fichiers", title: "File Allocation Table 32", answer: "Système de fichiers simple compatible multi-plateformes, limité à 4GB par fichier." },
+                { question: "exFAT", port: "Système fichiers", title: "Extended FAT", answer: "Extension de FAT32 supprimant la limite de 4GB, optimisé pour supports amovibles." },
+                { question: "ext4", port: "Système fichiers", title: "Fourth Extended Filesystem", answer: "Système de fichiers Linux avec journalisation et support de gros volumes." },
+                { question: "ZFS", port: "Système fichiers", title: "Zettabyte File System", answer: "Système de fichiers avancé avec intégrité des données, snapshots et compression." },
+                { question: "RAID 0", port: "Agrégation", title: "Striping", answer: "Répartition des données sur plusieurs disques pour améliorer les performances." },
+                { question: "RAID 1", port: "Miroir", title: "Mirroring", answer: "Duplication exacte des données sur deux disques pour la redondance." },
+                { question: "RAID 5", port: "Parité", title: "Striping with Parity", answer: "Répartition avec parité permettant de tolérer la panne d'un disque." },
+                { question: "RAID 10", port: "Hybride", title: "RAID 1+0", answer: "Combinaison de RAID 1 et RAID 0 pour performance et redondance." },
+                { question: "LVM", port: "Linux", title: "Logical Volume Manager", answer: "Gestionnaire de volumes logiques pour une gestion flexible du stockage Linux." },
+                { question: "iSCSI", port: "Port 3260", title: "Internet SCSI", answer: "Protocole de stockage transportant les commandes SCSI sur IP." },
+                { question: "Fibre Channel", port: "Réseau", title: "FC", answer: "Technologie réseau haute vitesse pour connecter serveurs et stockage SAN." },
+                { question: "FCoE", port: "Convergence", title: "Fibre Channel over Ethernet", answer: "Transport du protocole Fibre Channel sur infrastructure Ethernet 10Gb." },
+                { question: "CIFS", port: "Port 445", title: "Common Internet File System", answer: "Protocole Microsoft pour le partage de fichiers et imprimantes sur réseau." },
+                { question: "SMB", port: "Port 445", title: "Server Message Block", answer: "Protocole de partage de fichiers, base de CIFS, utilisé par Windows." },
+                { question: "NFS", port: "Port 2049", title: "Network File System", answer: "Système de fichiers distribué permettant le montage distant sous Unix/Linux." },
+                { question: "LUN", port: "Stockage", title: "Logical Unit Number", answer: "Unité logique de stockage présentée par un contrôleur SCSI ou SAN." },
+                { question: "Snapshot", port: "Image", title: "Instantané", answer: "Copie point-in-time d'un volume de stockage ou système de fichiers." },
+                { question: "Backup", port: "Sauvegarde", title: "Sauvegarde", answer: "Copie de sécurité des données pour protection contre la perte ou corruption." },
+                { question: "Clone", port: "Duplication", title: "Clonage", answer: "Copie exacte et indépendante d'un volume ou LUN de stockage." },
+                { question: "Déduplication", port: "Optimisation", title: "Data Deduplication", answer: "Élimination des données dupliquées pour optimiser l'utilisation du stockage." },
+                { question: "Compression", port: "Optimisation", title: "Compression de données", answer: "Réduction de la taille des données stockées pour économiser l'espace." },
+                { question: "Tiering", port: "Hiérarchisation", title: "Storage Tiering", answer: "Placement automatique des données sur différents types de stockage selon l'usage." },
+                { question: "SSD", port: "Support", title: "Solid State Drive", answer: "Disque de stockage utilisant la mémoire flash, plus rapide que les disques mécaniques." },
+                { question: "HDD", port: "Support", title: "Hard Disk Drive", answer: "Disque dur mécanique utilisant des plateaux magnétiques rotatifs." },
+                { question: "SAS", port: "Interface", title: "Serial Attached SCSI", answer: "Interface série haute performance pour connecter disques et contrôleurs." },
+                { question: "SATA", port: "Interface", title: "Serial ATA", answer: "Interface série standard pour connecter disques durs et SSD aux cartes mères." },
+                { question: "SCSI", port: "Interface", title: "Small Computer System Interface", answer: "Interface parallèle pour connecter périphériques de stockage haute performance." },
+                { question: "FC-AL", port: "Topologie", title: "Fibre Channel Arbitrated Loop", answer: "Topologie Fibre Channel en boucle partagée jusqu'à 126 périphériques." },
+                { question: "Object Storage", port: "Paradigme", title: "Stockage Objet", answer: "Stockage de données comme objets avec métadonnées, scalable massivement." },
+                { question: "Block Storage", port: "Paradigme", title: "Stockage Bloc", answer: "Stockage de données en blocs de taille fixe, utilisé par systèmes de fichiers." },
+                { question: "File Storage", port: "Paradigme", title: "Stockage Fichier", answer: "Stockage hiérarchique traditionnel organisé en dossiers et fichiers." },
+                { question: "JBOD", port: "Configuration", title: "Just a Bunch of Disks", answer: "Configuration sans RAID où chaque disque est présenté individuellement." },
+                { question: "Hot Spare", port: "Redondance", title: "Disque de secours", answer: "Disque en attente qui remplace automatiquement un disque défaillant." },
+                { question: "IOPS", port: "Performance", title: "Input/Output Operations Per Second", answer: "Métrique mesurant le nombre d'opérations d'entrée/sortie par seconde." },
+                { question: "Latence", port: "Performance", title: "Latency", answer: "Temps de réponse entre une demande d'accès et la disponibilité des données." },
+                { question: "Throughput", port: "Performance", title: "Débit", answer: "Quantité de données transférées par unité de temps (MB/s ou GB/s)." }
+            ]
+        };
+
+        let currentCategory = '';
+        let currentCards = [];
+        let currentCardIndex = 0;
+        let isFlipped = false;
+        let customList = [];
+        let allCards = [];
+        let filteredCards = [];
+
+        // Initialiser la liste complète de toutes les cartes
+        function initializeAllCards() {
+            allCards = [];
+            Object.keys(cardData).forEach(category => {
+                cardData[category].forEach(card => {
+                    allCards.push({
+                        ...card,
+                        category: category,
+                        id: `${category}_${card.question}`
+                    });
+                });
+            });
+            filteredCards = [...allCards];
+        }
+
+        function selectCategory(category) {
+            currentCategory = category;
+            currentCards = [...cardData[category]];
+            currentCardIndex = 0;
+            isFlipped = false;
+
+            showCardView();
+            showCard();
+        }
+
+        function showCardView() {
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('card-view').style.display = 'block';
+            document.getElementById('custom-manager').style.display = 'none';
+            document.getElementById('controls').style.display = 'flex';
+            document.getElementById('progress').style.display = 'block';
+            document.querySelector('.card-counter').style.display = 'block';
+        }
+
+        function showCustomManager() {
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('card-view').style.display = 'none';
+            document.getElementById('custom-manager').style.display = 'block';
+            
+            initializeAllCards();
+            displayCardsForSelection();
+            updateCustomCount();
+        }
+
+        function displayCardsForSelection() {
+            const browser = document.getElementById('cards-browser');
+            browser.innerHTML = '';
+
+            filteredCards.forEach(card => {
+                const isSelected = customList.some(c => c.id === card.id);
+                
+                const cardItem = document.createElement('div');
+                cardItem.className = `card-item ${isSelected ? 'selected' : ''}`;
+                cardItem.innerHTML = `
+                    <button class="add-btn" onclick="toggleCardInCustomList('${card.id}')"></button>
+                    <div class="card-info">
+                        <div class="card-name">${card.question}</div>
+                        <span class="card-category">${getCategoryDisplayName(card.category)}</span>
+                    </div>
+                `;
+                browser.appendChild(cardItem);
+            });
+        }
+
+        function getCategoryDisplayName(category) {
+            const names = {
+                protocols: 'Protocoles',
+                network: 'Réseaux', 
+                windows: 'Windows',
+                linux: 'Linux',
+                security: 'Sécurité',
+                vmware: 'VMware',
+                storage: 'Stockage'
+            };
+            return names[category] || category;
+        }
+
+        function toggleCardInCustomList(cardId) {
+            const card = allCards.find(c => c.id === cardId);
+            const existingIndex = customList.findIndex(c => c.id === cardId);
+            
+            if (existingIndex !== -1) {
+                // Retirer de la liste
+                customList.splice(existingIndex, 1);
+            } else {
+                // Ajouter à la liste
+                customList.push(card);
+            }
+            
+            displayCardsForSelection();
+            updateCustomCount();
+        }
+
+        function updateCustomCount() {
+            const count = customList.length;
+            document.getElementById('custom-count').textContent = `${count} carte${count > 1 ? 's' : ''} sélectionnée${count > 1 ? 's' : ''}`;
+            
+            const startBtn = document.getElementById('start-study-btn');
+            startBtn.disabled = count === 0;
+        }
+
+        function filterByCategory() {
+            const selectedCategory = document.getElementById('category-filter').value;
+            
+            if (selectedCategory === 'all') {
+                filteredCards = [...allCards];
+            } else {
+                filteredCards = allCards.filter(card => card.category === selectedCategory);
+            }
+            
+            displayCardsForSelection();
+        }
+
+        function searchCards() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const selectedCategory = document.getElementById('category-filter').value;
+            
+            let baseCards = selectedCategory === 'all' ? allCards : allCards.filter(card => card.category === selectedCategory);
+            
+            if (searchTerm) {
+                filteredCards = baseCards.filter(card => 
+                    card.question.toLowerCase().includes(searchTerm) ||
+                    card.title.toLowerCase().includes(searchTerm) ||
+                    card.answer.toLowerCase().includes(searchTerm)
+                );
+            } else {
+                filteredCards = baseCards;
+            }
+            
+            displayCardsForSelection();
+        }
+
+        function startCustomStudy() {
+            if (customList.length === 0) return;
+            
+            currentCategory = 'custom';
+            currentCards = [...customList];
+            currentCardIndex = 0;
+            isFlipped = false;
+
+            showCardView();
+            showCard();
+        }
+
+        function clearCustomList() {
+            customList = [];
+            displayCardsForSelection();
+            updateCustomCount();
+        }
+
+        function showCard() {
+            if (currentCards.length === 0) return;
+
+            const card = currentCards[currentCardIndex];
+            const cardElement = document.getElementById('flashcard');
+            
+            // Reset flip state
+            cardElement.classList.remove('flipped');
+            isFlipped = false;
+
+            // Update card content
+            document.getElementById('card-question').textContent = card.question;
+            document.getElementById('card-port').textContent = card.port;
+            document.getElementById('card-title').textContent = card.title;
+            document.getElementById('card-answer').textContent = card.answer;
+
+            // Update counter and progress
+            document.getElementById('counter').textContent = `Carte ${currentCardIndex + 1} sur ${currentCards.length}`;
+            const progress = ((currentCardIndex + 1) / currentCards.length) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+        }
+
+        function flipCard() {
+            const card = document.getElementById('flashcard');
+            card.classList.toggle('flipped');
+            isFlipped = !isFlipped;
+        }
+
+        function nextCard() {
+            if (currentCardIndex < currentCards.length - 1) {
+                currentCardIndex++;
+            } else {
+                currentCardIndex = 0; // Retour au début
+            }
+            showCard();
+        }
+
+        function shuffleCards() {
+            // Algorithme de mélange Fisher-Yates
+            for (let i = currentCards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [currentCards[i], currentCards[j]] = [currentCards[j], currentCards[i]];
+            }
+            currentCardIndex = 0;
+            showCard();
+        }
+
+        function resetProgress() {
+            currentCards = [...cardData[currentCategory]];
+            currentCardIndex = 0;
+            showCard();
+        }
+
+        function goHome() {
+            document.getElementById('home-view').style.display = 'block';
+            document.getElementById('card-view').style.display = 'none';
+            document.getElementById('custom-manager').style.display = 'none';
+        }
+
+        // Gestion des gestes tactiles pour Android
+        let startX = 0;
+        let startY = 0;
+
+        document.addEventListener('touchstart', function(e) {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            if (!e.changedTouches) return;
+            
+            const endX = e.changedTouches[0].clientX;
+            const endY = e.changedTouches[0].clientY;
+            const diffX = startX - endX;
+            const diffY = startY - endY;
+
+            // Swipe horizontal pour changer de carte
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                if (document.getElementById('card-view').style.display !== 'none') {
+                    if (diffX > 0) {
+                        // Swipe gauche - carte suivante
+                        nextCard();
+                    } else {
+                        // Swipe droite - carte précédente
+                        if (currentCardIndex > 0) {
+                            currentCardIndex--;
+                            showCard();
+                        }
+                    }
+                }
+            }
+        });
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeAllCards();
+            console.log('Application de cartes IT chargée');
+        });
+    </script>
+</body>
+</html>
