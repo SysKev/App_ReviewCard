@@ -73,11 +73,12 @@
 
         .category-btn.protocols { background: linear-gradient(135deg, #e74c3c, #c0392b); }
         .category-btn.network { background: linear-gradient(135deg, #f39c12, #e67e22); }
-        .category-btn.windows { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
-        .category-btn.linux { background: linear-gradient(135deg, #27ae60, #229954); }
-        .category-btn.security { background: linear-gradient(135deg, #e67e22, #d35400); }
-        .category-btn.vmware { background: linear-gradient(135deg, #3498db, #2c3e50); }
-        .category-btn.storage { background: linear-gradient(135deg, #9b59b6, #2c3e50); }
+        .category-btn.windows { background: linear-gradient(135deg, #287baa, #0400ff); }
+        .category-btn.linux { background: linear-gradient(135deg, #000000, #000000); }
+        .category-btn.Securite { background: linear-gradient(135deg, #02c232, #6be660); }
+        .category-btn.vmware { background: linear-gradient(55deg, #df7803, #052799); }
+        .category-btn.storage { background: linear-gradient(135deg, #9b59b6, #450eaa); }
+        .category-btn.Gestion_de_projet { background: linear-gradient(135deg, #0caca4, #3843a3); }
         .category-btn.custom { background: linear-gradient(135deg, #f39c12, #e67e22); }
 
         .card-container {
@@ -88,7 +89,7 @@
 
         .card {
             width: 100%;
-            height: 300px;
+            height: 400px;
             position: relative;
             margin: 20px auto;
             perspective: 1000px;
@@ -170,16 +171,28 @@
             gap: 15px;
         }
 
-        .btn {
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 10px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
+		.btn {
+			background: linear-gradient(135deg, #3498db, #2980b9);
+			color: white;
+			border: none;
+			padding: 12px 20px;
+			border-radius: 50px; /* arrondi complet */
+			font-size: 16px;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* ombre douce */
+		}
+		
+		.btn:hover {
+			background: linear-gradient(135deg, #2980b9, #3498db); /* inversion */
+			transform: translateY(-3px); /* léger effet de levée */
+			box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+		}
+		
+		.btn:active {
+			transform: translateY(-1px); /* effet clic */
+			box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+		}
 
         .btn:hover {
             transform: translateY(-2px);
@@ -230,9 +243,9 @@
             display: flex;
             align-items: center;
             padding: 12px;
-            margin: 8px 0;
+            margin: 9px 0;
             background: #f8f9fa;
-            border-radius: 8px;
+            border-radius: 9px;
             border: 2px solid transparent;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -304,6 +317,9 @@
             opacity: 0.5;
             cursor: not-allowed;
         }
+        .answer {
+            white-space: pre-line; /* interprète les \n comme des retours à la ligne */
+        }
     </style>
 </head>
 <body>
@@ -371,13 +387,14 @@
                     <div class="card-back">
                         <div class="port" id="card-port">Port 22</div>
                         <h3 id="card-title">Secure Shell</h3>
-                        <p id="card-answer">Protocole de communication sécurisé permettant de se connecter à distance à un serveur via un tunnel chiffré.</p>
+                        <p id="card-answer"class="answer">Protocole de communication sécurisé permettant de se connecter à distance à un serveur via un tunnel chiffré.</p>
                     </div>
                 </div>
             </div>
 
             <div class="controls" id="controls">
-                <button class="btn" onclick="nextCard()">Carte Suivante</button>
+                <button class="btn" onclick="nextCard()">Suivant ➡️</button>
+                <button class="btn" onclick="lastCard()">⬅️ Précédent</button>
                 <button class="btn secondary" onclick="shuffleCards()">🔀 Mélanger</button>
             </div>
         </div>
@@ -412,7 +429,7 @@
                         <option value="Securite">Securite</option>
                         <option value="vmware">VMware</option>
                         <option value="storage">Stockage</option>
-                        <option value="gestion_projet">Gestion_de_projet</option>
+                        <option value="gestion_de_projet">Gestion_de_projet</option>
                     </select>
                 </div>
 
@@ -433,12 +450,12 @@
         const cardData = {
             protocols: [
 				{ question: "SSH", port: "Port 22", title: "Secure Shell", answer: "Permet une administration distante et sécurisée d'un serveur via un canal chiffré, protégeant les informations échangées contre les interceptions. Supporte l’authentification forte par clé/ mot de passe et permet aussi de transférer des fichiers en toute confidentialité." },
-					{ question: "HTTP", port: "Port 80", title: "HyperText Transfer Protocol", answer: "Protocole fondamental du web pour la transmission client-serveur de contenus (pages, textes, images). Fonctionnant sans chiffrement, il reste vulnérable aux attaques de type interception et manipulation des données échangées." },
-					{ question: "HTTPS", port: "Port 443", title: "HTTP Secure", answer: "Version sécurisée de HTTP qui repose sur SSL/TLS pour garantir le chiffrement, l’authentification du site visitée et l’intégrité des échanges : indispensable pour les transactions ou communications sensibles." },
-					{ question: "FTP", port: "Port 21", title: "File Transfer Protocol", answer: "Permet le transfert de fichiers entre un client et un serveur sur un réseau, et éventuellement l’édition à distance. En l’absence de chiffrement natif il expose login et données, d’où l’intérêt de variantes sécurisées comme SFTP ou FTPS." },
-					{ question: "SMTP", port: "Port 25", title: "Simple Mail Transfer Protocol", answer: "Protocole standard d’envoi d’emails entre serveurs, fonctionnant habituellement sans chiffrement. Il doit donc être couplé à des protections anti-spam et à des solutions de sécurisation (ex : STARTTLS) pour garantir la confidentialité." },
-					{ question: "SMTPS", port: "Port 465", title: "Simple Mail Transfer Protocol Secure", answer: "Déploie SMTP sur une connexion SSL/TLS pour chiffrer les emails expédiés, vérifie l’identité des serveurs et préserve les messages contre toute interception ou modification durant leur transmission." },
-					{ question: "DNS", port: "Port 53", title: "Domain Name System", answer: "Assure la conversion entre noms de domaine et adresses IP pour la navigation et la communication réseau. La sécurité peut être renforcée par DNSSEC qui protège contre les falsifications de réponse." },
+				{ question: "HTTP", port: "Port 80", title: "HyperText Transfer Protocol", answer: "Protocole fondamental du web pour la transmission client-serveur de contenus (pages, textes, images). Fonctionnant sans chiffrement, il reste vulnérable aux attaques de type interception et manipulation des données échangées." },
+				{ question: "HTTPS", port: "Port 443", title: "HTTP Secure", answer: "Version sécurisée de HTTP qui repose sur SSL/TLS pour garantir le chiffrement, l’authentification du site visitée et l’intégrité des échanges : indispensable pour les transactions ou communications sensibles." },
+				{ question: "FTP", port: "Port 21", title: "File Transfer Protocol", answer: "Permet le transfert de fichiers entre un client et un serveur sur un réseau, et éventuellement l’édition à distance. En l’absence de chiffrement natif il expose login et données, d’où l’intérêt de variantes sécurisées comme SFTP ou FTPS." },
+				{ question: "SMTP", port: "Port 25", title: "Simple Mail Transfer Protocol", answer: "Protocole standard d’envoi d’emails entre serveurs, fonctionnant habituellement sans chiffrement. Il doit donc être couplé à des protections anti-spam et à des solutions de sécurisation (ex : STARTTLS) pour garantir la confidentialité." },
+				{ question: "SMTPS", port: "Port 465", title: "Simple Mail Transfer Protocol Secure", answer: "Déploie SMTP sur une connexion SSL/TLS pour chiffrer les emails expédiés, vérifie l’identité des serveurs et préserve les messages contre toute interception ou modification durant leur transmission." },
+				{ question: "DNS", port: "Port 53", title: "Domain Name System", answer: "Assure la conversion entre noms de domaine et adresses IP pour la navigation et la communication réseau. La sécurité peut être renforcée par DNSSEC qui protège contre les falsifications de réponse." },
 				{ question: "DHCP", port: "Port 67/68", title: "Dynamic Host Configuration Protocol", answer: "Automatise la distribution d’adresses IP et paramètres réseau aux ordinateurs d’un réseau local : simplifie la gestion et l’intégration tout en limitant les erreurs humaines." },
 				{ question: "L2TP", port: "Port 1701", title: "Layer 2 Tunneling Protocol", answer: "Permet la création de tunnels VPN pour faire passer des données privées sur un réseau public ; le chiffrement des données doit être assuré par une couche IPSec séparée." },
 				{ question: "L2TPv3", port: "Port 1701", title: "L2TP Version 3", answer: "Ajoute la prise en charge avancée de divers types de circuits virtuels : utilisé par les opérateurs pour transporter plusieurs technologies réseau sur une même infrastructure." },
@@ -447,7 +464,7 @@
 				{ question: "LCP", port: "PPP", title: "Link Control Protocol", answer: "Gestionnaire des liens dans PPP : négocie, configure et termine la connexion, optimise les paramètres et peut demander l’authentification avant de transmettre la session principale." },
 				{ question: "LLMNR", port: "Port 5355", title: "Link-Local Multicast Name Resolution", answer: "Permet la résolution de noms sur des réseaux Microsoft sans serveur DNS : utile pour la découverte locale mais comportant des vulnérabilités en cas d’usage sur réseaux partagés publics." },
 				{ question: "PPTP", port: "Port 1723", title: "Point-to-Point Tunneling Protocol", answer: "Crée des tunnels VPN pour transporter les données sur IP ; désormais réputé peu sécurisé (faiblesses connues), il tend à être remplacé par des VPN plus robustes : L2TP/IPsec, SSTP." },
-					{ question: "POP3", port: "Port 110", title: "Post Office Protocol v3", answer: "Télécharge les messages électroniques d’un serveur vers un client, généralement avec suppression sur le serveur : la version sécurisée POP3S ajoute un chiffrement SSL/TLS indispensable pour la confidentialité." },
+				{ question: "POP3", port: "Port 110", title: "Post Office Protocol v3", answer: "Télécharge les messages électroniques d’un serveur vers un client, généralement avec suppression sur le serveur : la version sécurisée POP3S ajoute un chiffrement SSL/TLS indispensable pour la confidentialité." },
 				{ question: "IMAP4", port: "Port 143", title: "Internet Message Access Protocol v4", answer: "Permet de gérer ses emails directement sur le serveur, avec organisation en dossiers et consultation multi-terminaux. La version sécurisée IMAPS utilise SSL/TLS pour chiffrer les accès." },
 				{ question: "PAP", port: "PPP", title: "Password Authentication Protocol", answer: "Méthode simple d’authentification pour PPP : envoie le mot de passe en clair, exposé aux écoutes, et fortement déconseillé sans protection de chiffrement complémentaire (ex : tunnel VPN)." },
 				{ question: "PPPoE", port: "Couche 2", title: "PPP over Ethernet", answer: "Encapsule PPP dans des trames Ethernet pour fournir l’accès haut débit aux fournisseurs d’accès Internet (ADSL, fibre), intégrant l’authentification et la gestion dynamique des sessions réseau." },
@@ -533,7 +550,9 @@
 			
 				// Services Windows
 				{ question: "Active Directory", port: "Service", title: "AD", answer: "Service d'annuaire Microsoft fournissant une gestion centralisée des utilisateurs, groupes, ordinateurs et politiques de sécurité dans un environnement réseau d'entreprise." },
-				{ question: "Group Policy", port: "Gestion", title: "Stratégie de groupe", answer: "Mécanisme de configuration centralisée permettant d’appliquer des paramètres de sécurité, politiques utilisateurs et configuration système sur plusieurs ordinateurs dans un domaine Active Directory." },
+				{ question: "Forêt Active Directory", title: "Active Directory Forest", answer: "Une forêt Active Directory est le conteneur logique le plus élevé qui regroupe plusieurs domaines partageant un schéma commun, un catalogue global et des relations d’approbation. Elle définit les limites de sécurité et de réplication, permettant une gestion centralisée des ressources, des utilisateurs et des stratégies dans un environnement d’entreprise." },
+                { question: "Rôles FSMO", title: "Flexible Single Master Operations", answer: "(1) Maître de schéma – contrôle les mises à jour et modifications du schéma AD dans toute la forêt. \n (2) Maître d’attribution de noms de domaine – garantit l’unicité lors de l’ajout ou de la suppression de domaines dans la forêt.\n (3) Maître RID – attribue des blocs d’identificateurs relatifs (RID) aux contrôleurs de domaine afin d’assurer l’unicité des objets.\n (4) Émulateur PDC – agit comme contrôleur principal pour la compatibilité descendante, les changements de mots de passe et la synchronisation horaire.\n (5) Maître d’infrastructure – maintient les références des objets situés dans d’autres domaines afin d’assurer la cohérence inter-domaines." },
+                { question: "Group Policy", port: "Gestion", title: "Stratégie de groupe", answer: "Mécanisme de configuration centralisée permettant d’appliquer des paramètres de sécurité, politiques utilisateurs et configuration système sur plusieurs ordinateurs dans un domaine Active Directory." },
 				{ question: "WMI", port: "Gestion", title: "Windows Management Instrumentation", answer: "Infrastructure Windows fournissant une interface pour la gestion et la surveillance des ressources système, comme le matériel, les logiciels, les processus et les événements." },
 				{ question: "WinRM", port: "Port 5985/5986", title: "Windows Remote Management", answer: "Service basé sur les standards WS-Management autorisant la gestion et l’administration des systèmes Windows à distance via un protocole sécurisé." },
 				{ question: "SCCM", port: "Gestion", title: "System Center Configuration Manager", answer: "Solution Microsoft de gestion centralisée permettant le déploiement, la mise à jour, la configuration et la sécurité des postes de travail et serveurs à grande échelle." },
@@ -926,6 +945,15 @@
                 currentCardIndex++;
             } else {
                 currentCardIndex = 0; // Retour au début
+            }
+            showCard();
+        }
+
+        function lastCard() {
+            if (currentCardIndex > 0) {
+                currentCardIndex--;
+            } else {
+                currentCardIndex = currentCards.length - 1; // Retour à la dernière carte
             }
             showCard();
         }
