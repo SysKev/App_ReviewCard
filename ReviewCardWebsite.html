@@ -309,8 +309,8 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎓 Cartes IT</h1>
-            <p>Apprenez l'informatique avec des cartes interactives</p>
+            <h1> 🃏 Cartes pour révision ASR 🃏</h1>
+            <p>Révisez l'informatique avec des cartes interactives </p>
         </div>
 
         <div id="home-view">
@@ -341,6 +341,10 @@
                 </button>
                 <button class="category-btn storage" onclick="selectCategory('storage')">
                     💾 Stockage
+                    <span>→</span>
+                </button>
+                <button class="category-btn Gestion_de_projet" onclick="selectCategory('Gestion_de_projet')">
+                    📚Gestion de projet
                     <span>→</span>
                 </button>
                 <button class="category-btn custom" onclick="showCustomManager()">
@@ -375,7 +379,6 @@
             <div class="controls" id="controls">
                 <button class="btn" onclick="nextCard()">Carte Suivante</button>
                 <button class="btn secondary" onclick="shuffleCards()">🔀 Mélanger</button>
-                <button class="btn secondary" onclick="resetProgress()">🔄 Recommencer</button>
             </div>
         </div>
 
@@ -391,7 +394,7 @@
 
                 <div class="custom-actions" style="display: flex; gap: 10px; margin-bottom: 20px;">
                     <button class="btn" onclick="startCustomStudy()" id="start-study-btn" style="flex: 1;" disabled>
-                        🎓 Commencer l'étude
+                        🃏 Lancer la liste de cartes personnalisée
                     </button>
                     <button class="btn secondary" onclick="clearCustomList()" style="flex: 1;">
                         🗑️ Vider la liste
@@ -406,9 +409,10 @@
                         <option value="network">Réseaux</option>
                         <option value="windows">Windows</option>
                         <option value="linux">Linux</option>
-                        <option value="security">Sécurité</option>
+                        <option value="securite">Sécurité</option>
                         <option value="vmware">VMware</option>
                         <option value="storage">Stockage</option>
+                        <option value="gestion_projet">Gestion_de_projet</option>
                     </select>
                 </div>
 
@@ -433,6 +437,7 @@
                 { question: "HTTPS", port: "Port 443", title: "HTTP Secure", answer: "Version sécurisée de HTTP utilisant le chiffrement SSL/TLS pour protéger les données." },
                 { question: "FTP", port: "Port 21", title: "File Transfer Protocol", answer: "Protocole de transfert de fichiers entre un client et un serveur sur un réseau." },
                 { question: "SMTP", port: "Port 25", title: "Simple Mail Transfer Protocol", answer: "Protocole pour l'envoi d'emails entre serveurs de messagerie." },
+                { question: "SMTPS", port: "Port 465", title: "Simple Mail Transfer Protocol Secure", answer: "Protocole sécurisé d’envoi d’emails utilisant SSL/TLS pour chiffrer les communications." },
                 { question: "DNS", port: "Port 53", title: "Domain Name System", answer: "Service de résolution de noms de domaine en adresses IP." },
                 { question: "DHCP", port: "Port 67/68", title: "Dynamic Host Configuration Protocol", answer: "Protocole d'attribution automatique d'adresses IP et de configuration réseau." },
                 { question: "APIPA", port: "169.254.x.x", title: "Automatic Private IP Addressing", answer: "Attribution automatique d'adresse IP privée quand aucun serveur DHCP n'est disponible." },
@@ -449,10 +454,6 @@
                 { question: "PPPoE", port: "Couche 2", title: "PPP over Ethernet", answer: "Encapsulation du protocole PPP dans des trames Ethernet pour l'accès haut débit." },
                 { question: "UPnP", port: "Port 1900", title: "Universal Plug and Play", answer: "Ensemble de protocoles pour la découverte automatique de périphériques réseau." },
                 { question: "WAP", port: "Variable", title: "Wireless Application Protocol", answer: "Protocole pour accéder à Internet depuis des appareils mobiles sans fil." },
-                { question: "RTMP", port: "Port 1935", title: "Real-Time Messaging Protocol", answer: "Protocole Adobe pour le streaming audio, vidéo et données en temps réel." },
-                { question: "RTCP", port: "Pair RTP", title: "Real-Time Control Protocol", answer: "Protocole de contrôle pour monitorer la qualité des transmissions RTP." },
-                { question: "RPC", port: "Port 135", title: "Remote Procedure Call", answer: "Protocole permettant d'exécuter des procédures sur des machines distantes." },
-                { question: "SRTP", port: "Variable", title: "Secure Real-time Transport Protocol", answer: "Version sécurisée de RTP avec chiffrement pour les communications multimédia." },
                 { question: "SSTP", port: "Port 443", title: "Secure Socket Tunneling Protocol", answer: "Protocole VPN Microsoft utilisant HTTPS pour créer des tunnels sécurisés." },
                 { question: "SNMP", port: "Port 161", title: "Simple Network Management Protocol", answer: "Protocole de gestion et surveillance des équipements réseau." },
                 { question: "SIP", port: "Port 5060", title: "Session Initiation Protocol", answer: "Protocole de signalisation pour établir des sessions de communication multimédia." },
@@ -461,150 +462,185 @@
                 { question: "Kerberos", port: "Port 88", title: "Kerberos", answer: "Protocole d'authentification réseau utilisant des tickets pour sécuriser les communications." },
                 { question: "NTLM", port: "Authentification", title: "NT LAN Manager", answer: "Protocole d'authentification Microsoft pour les réseaux Windows." },
                 { question: "NetBIOS", port: "Port 137-139", title: "Network Basic Input/Output System", answer: "API permettant aux applications de communiquer sur un réseau local." },
-                { question: "PDP", port: "Mobile", title: "Packet Data Protocol", answer: "Protocole de transmission de données par paquets dans les réseaux mobiles." }
             ],
             network: [
-                { question: "TCP", port: "Couche 4", title: "Transmission Control Protocol", answer: "Protocole de transport fiable avec contrôle de flux et détection d'erreurs." },
-                { question: "UDP", port: "Couche 4", title: "User Datagram Protocol", answer: "Protocole de transport rapide sans garantie de livraison, utilisé pour le streaming." },
-                { question: "IP", port: "Couche 3", title: "Internet Protocol", answer: "Protocole de routage des paquets de données à travers les réseaux." },
-                { question: "ARP", port: "Couche 2", title: "Address Resolution Protocol", answer: "Protocole pour associer une adresse IP à une adresse MAC sur un réseau local." },
-                { question: "VLAN", port: "Couche 2", title: "Virtual Local Area Network", answer: "Segmentation logique d'un réseau physique en plusieurs réseaux virtuels." },
-                { question: "CDP", port: "Couche 2", title: "Cisco Discovery Protocol", answer: "Protocole propriétaire Cisco pour découvrir les équipements réseau adjacents." },
-                { question: "DTP", port: "Couche 2", title: "Dynamic Trunk Protocol", answer: "Protocole Cisco pour négocier automatiquement les liens trunk entre switches." },
-                { question: "HSRP", port: "UDP 1985", title: "Hot Standby Router Protocol", answer: "Protocole Cisco de redondance pour assurer la haute disponibilité des routeurs." },
-                { question: "LLDP", port: "Couche 2", title: "Link Layer Discovery Protocol", answer: "Protocole standard pour découvrir les équipements réseau voisins." },
-                { question: "MPLS", port: "Couche 2.5", title: "Multiprotocol Label Switching", answer: "Technique de commutation par étiquettes pour optimiser le routage réseau." },
-                { question: "NAT", port: "Couche 3", title: "Network Address Translation", answer: "Traduction d'adresses réseau pour partager une IP publique entre plusieurs machines." },
-                { question: "PAT", port: "Couche 3", title: "Port Address Translation", answer: "Extension de NAT utilisant les ports pour multiplexer les connexions." },
-                { question: "OUI", port: "Adresse MAC", title: "Organizationally Unique Identifier", answer: "Identifiant unique de 3 octets attribué aux fabricants d'équipements réseau." },
-                { question: "PAGP", port: "Agrégation", title: "Port Aggregation Protocol", answer: "Protocole propriétaire Cisco pour agréger plusieurs liens physiques en un lien logique." },
-                { question: "LACP", port: "IEEE 802.3ad", title: "Link Aggregation Control Protocol", answer: "Protocole standard pour agréger plusieurs liens Ethernet en un seul lien logique." },
-                { question: "EIGRP", port: "Routage", title: "Enhanced Interior Gateway Routing Protocol", answer: "Protocole de routage hybride Cisco combinant vecteur distance et état de liens." },
-                { question: "OSPF", port: "Routage", title: "Open Shortest Path First", answer: "Protocole de routage à état de liens utilisant l'algorithme de Dijkstra." },
-                { question: "RIP", port: "Port 520", title: "Routing Information Protocol", answer: "Protocole de routage à vecteur de distance, limité à 15 sauts maximum." },
-                { question: "Router on a Stick", port: "Topologie", title: "Routeur sur bâton", answer: "Configuration utilisant un seul routeur pour router entre VLANs via sous-interfaces." },
-                { question: "Trunk", port: "Liaison", title: "Liaison trunk", answer: "Liaison transportant le trafic de plusieurs VLANs avec étiquetage (802.1Q)." },
-                { question: "Distance Administrative", port: "Routage", title: "Administrative Distance", answer: "Métrique de fiabilité des sources de routage (0=connecté, 1=statique, 110=OSPF)." },
-                { question: "STP", port: "Couche 2", title: "Spanning Tree Protocol", answer: "Protocole prévenant les boucles dans les réseaux commutés redondants." },
-                { question: "RSTP", port: "IEEE 802.1w", title: "Rapid Spanning Tree Protocol", answer: "Version accélérée de STP avec convergence plus rapide." },
-                { question: "PVST+", port: "Cisco", title: "Per-VLAN Spanning Tree Plus", answer: "Implémentation Cisco de STP avec une instance par VLAN." },
-                { question: "VTP", port: "Couche 2", title: "VLAN Trunking Protocol", answer: "Protocole Cisco pour synchroniser la configuration VLAN entre switches." },
-                { question: "Inter-VLAN Routing", port: "Couche 3", title: "Routage inter-VLAN", answer: "Routage du trafic entre différents VLANs via routeur ou switch multicouche." },
-                { question: "Access Port", port: "Switch", title: "Port d'accès", answer: "Port de switch appartenant à un seul VLAN, sans étiquetage." },
-                { question: "Trunk Port", port: "Switch", title: "Port trunk", answer: "Port transportant plusieurs VLANs avec étiquetage 802.1Q ou ISL." },
-                { question: "Native VLAN", port: "Trunking", title: "VLAN natif", answer: "VLAN non étiqueté sur une liaison trunk, par défaut VLAN 1." },
-                { question: "VRRP", port: "Redondance", title: "Virtual Router Redundancy Protocol", answer: "Protocole standard de redondance de routeurs, alternative ouverte à HSRP." },
-                { question: "BGP", port: "Port 179", title: "Border Gateway Protocol", answer: "Protocole de routage externe pour échanger routes entre systèmes autonomes Internet." },
-                { question: "ACL", port: "Sécurité", title: "Access Control List", answer: "Liste de règles filtrant le trafic réseau selon critères définis." },
-                { question: "QoS", port: "Qualité", title: "Quality of Service", answer: "Mécanismes de priorisation du trafic pour garantir qualité de service." },
-                { question: "CoS", port: "Priorité", title: "Class of Service", answer: "Marquage de priorité au niveau couche 2 (802.1p) dans l'en-tête Ethernet." },
-                { question: "DSCP", port: "Priorité", title: "Differentiated Services Code Point", answer: "Marquage QoS dans l'en-tête IP pour classification du trafic." },
-                { question: "EtherChannel", port: "Agrégation", title: "EtherChannel", answer: "Technologie Cisco d'agrégation de liens pour augmenter bande passante et redondance." },
-                { question: "Port Security", port: "Sécurité", title: "Sécurité de port", answer: "Fonctionnalité limitant et contrôlant les adresses MAC sur un port de switch." },
-                { question: "DHCP Snooping", port: "Sécurité", title: "DHCP Snooping", answer: "Fonctionnalité de sécurité filtrant les messages DHCP non autorisés." },
-                { question: "ARP Inspection", port: "Sécurité", title: "Dynamic ARP Inspection", answer: "Protection contre les attaques ARP spoofing en validant les bindings ARP." }
-            ],
-            network: [
-                { question: "TCP", port: "Couche 4", title: "Transmission Control Protocol", answer: "Protocole de transport fiable avec contrôle de flux et détection d'erreurs." },
-                { question: "UDP", port: "Couche 4", title: "User Datagram Protocol", answer: "Protocole de transport rapide sans garantie de livraison, utilisé pour le streaming." },
-                { question: "IP", port: "Couche 3", title: "Internet Protocol", answer: "Protocole de routage des paquets de données à travers les réseaux." },
-                { question: "ARP", port: "Couche 2", title: "Address Resolution Protocol", answer: "Protocole pour associer une adresse IP à une adresse MAC sur un réseau local." },
-                { question: "VLAN", port: "Couche 2", title: "Virtual Local Area Network", answer: "Segmentation logique d'un réseau physique en plusieurs réseaux virtuels." }
-            ],
-            windows: [
-                { question: "CMD", port: "Outil", title: "Invite de commandes", answer: "Interface en ligne de commande pour exécuter des commandes système Windows." },
-                { question: "PowerShell", port: "Outil", title: "Windows PowerShell", answer: "Shell avancé et langage de script pour l'administration système Windows." },
-                { question: "Registry", port: "Base de données", title: "Registre Windows", answer: "Base de données hiérarchique stockant les paramètres de configuration du système." },
-                { question: "Active Directory", port: "Service", title: "AD", answer: "Service d'annuaire Microsoft pour la gestion centralisée des utilisateurs et ressources." },
-                { question: "IIS", port: "Port 80/443", title: "Internet Information Services", answer: "Serveur web Microsoft pour héberger des sites web et applications." },
-                { question: "Group Policy", port: "Gestion", title: "Stratégie de groupe", answer: "Système de configuration centralisée des paramètres utilisateurs et ordinateurs." },
-                { question: "WMI", port: "Gestion", title: "Windows Management Instrumentation", answer: "Infrastructure pour la surveillance et gestion des ressources système Windows." },
-                { question: "Services.msc", port: "Console", title: "Gestionnaire de services", answer: "Console MMC pour gérer les services Windows (démarrage, arrêt, configuration)." },
-                { question: "Event Viewer", port: "Logs", title: "Observateur d'événements", answer: "Outil pour consulter les journaux système, sécurité et applications Windows." },
-                { question: "Task Manager", port: "Outil", title: "Gestionnaire des tâches", answer: "Utilitaire pour surveiller processus, performances et utilisation ressources." },
-                { question: "MSConfig", port: "Configuration", title: "System Configuration", answer: "Outil pour gérer le démarrage système et services Windows." },
-                { question: "Regedit", port: "Éditeur", title: "Éditeur du Registre", answer: "Interface graphique pour modifier manuellement la base de registre Windows." },
-                { question: "WSUS", port: "Port 8530", title: "Windows Server Update Services", answer: "Service de distribution centralisée des mises à jour Microsoft en entreprise." },
-                { question: "Hyper-V", port: "Virtualisation", title: "Hyper-V", answer: "Hyperviseur natif Windows pour créer et gérer des machines virtuelles." },
-                { question: "NTDS", port: "Base AD", title: "NT Directory Services", answer: "Base de données Active Directory stockée dans le fichier ntds.dit." },
-                { question: "Sysprep", port: "Outil", title: "System Preparation", answer: "Outil pour préparer une installation Windows au clonage ou déploiement." },
-                { question: "WDS", port: "Déploiement", title: "Windows Deployment Services", answer: "Service de déploiement d'images Windows via le réseau (PXE boot)." },
-                { question: "SCCM", port: "Gestion", title: "System Center Configuration Manager", answer: "Solution Microsoft de gestion centralisée des postes et serveurs." },
-                { question: "Exchange", port: "Port 25/443", title: "Microsoft Exchange", answer: "Serveur de messagerie Microsoft avec calendrier et collaboration." },
-                { question: "SQL Server", port: "Port 1433", title: "Microsoft SQL Server", answer: "Système de gestion de base de données relationnelle Microsoft." },
-                { question: "IIS Manager", port: "Gestion Web", title: "Gestionnaire IIS", answer: "Console d'administration pour configurer sites web et applications IIS." },
-                { question: "MMC", port: "Console", title: "Microsoft Management Console", answer: "Framework d'administration hébergeant les snap-ins de gestion Windows." },
-                { question: "DCOM", port: "Communication", title: "Distributed COM", answer: "Extension de COM permettant la communication entre objets sur le réseau." },
-                { question: "WinRM", port: "Port 5985/5986", title: "Windows Remote Management", answer: "Service de gestion à distance basé sur les standards WS-Management." },
-                { question: "BITS", port: "Transfert", title: "Background Intelligent Transfer Service", answer: "Service de transfert de fichiers en arrière-plan avec reprise sur interruption." },
-                { question: "DNS Server", port: "Port 53", title: "Serveur DNS Windows", answer: "Rôle Windows Server pour résolution de noms et gestion zones DNS." },
-                { question: "DHCP Server", port: "Port 67", title: "Serveur DHCP Windows", answer: "Rôle distribuant automatiquement adresses IP et configuration réseau." },
-                { question: "File Server", port: "Partage", title: "Serveur de fichiers", answer: "Rôle Windows pour partager fichiers et dossiers sur le réseau." },
-                { question: "Print Server", port: "Impression", title: "Serveur d'impression", answer: "Centralisation et gestion des imprimantes partagées sur le réseau." },
-                { question: "RDS", port: "Bureau distant", title: "Remote Desktop Services", answer: "Services de bureau à distance pour accès multi-utilisateurs aux applications." },
-                { question: "Terminal Server", port: "Port 3389", title: "Serveur de terminaux", answer: "Service permettant l'exécution d'applications sur serveur distant." },
-                { question: "Failover Cluster", port: "Haute dispo", title: "Cluster de basculement", answer: "Groupe de serveurs assurant la continuité de service en cas de panne." },
-                { question: "NLB", port: "Équilibrage", title: "Network Load Balancing", answer: "Répartition de charge réseau entre plusieurs serveurs Windows." },
-                { question: "WSFC", port: "Cluster", title: "Windows Server Failover Clustering", answer: "Technologie de clustering Microsoft pour haute disponibilité des services." },
-                { question: "DFS", port: "Namespace", title: "Distributed File System", answer: "Système de fichiers distribué unifiant l'accès aux partages réseau." },
-                { question: "FSRM", port: "Gestion", title: "File Server Resource Manager", answer: "Outils de gestion, quotas et classification des ressources de stockage." }
-            ],
-            linux: [
-                { question: "chmod", port: "Commande", title: "Change Mode", answer: "Commande pour modifier les permissions d'accès aux fichiers et dossiers." },
-                { question: "grep", port: "Commande", title: "Global Regular Expression Print", answer: "Outil de recherche de texte utilisant des expressions régulières." },
-                { question: "crontab", port: "Service", title: "Cron Table", answer: "Système de planification de tâches automatiques sous Unix/Linux." },
-                { question: "systemctl", port: "Commande", title: "System Control", answer: "Commande pour gérer les services système avec systemd." },
-                { question: "sudo", port: "Commande", title: "Substitute User Do", answer: "Permet d'exécuter des commandes avec les privilèges d'un autre utilisateur." },
-                { question: "iptables", port: "Pare-feu", title: "IP Tables", answer: "Outil de configuration du pare-feu Linux pour filtrer les paquets réseau." },
-                { question: "ssh-keygen", port: "Sécurité", title: "SSH Key Generator", answer: "Utilitaire pour générer des paires de clés publique/privée SSH." },
-                { question: "rsync", port: "Synchronisation", title: "Remote Sync", answer: "Outil de synchronisation et sauvegarde de fichiers locale ou distante." },
-                { question: "tar", port: "Archive", title: "Tape Archive", answer: "Utilitaire d'archivage pour créer et extraire des archives de fichiers." },
-                { question: "vi/vim", port: "Éditeur", title: "Vi Improved", answer: "Éditeur de texte modal puissant disponible sur tous les systèmes Unix/Linux." },
-                { question: "bash", port: "Shell", title: "Bourne Again Shell", answer: "Shell par défaut sur la plupart des distributions Linux avec scripting avancé." },
-                { question: "ps", port: "Processus", title: "Process Status", answer: "Commande affichant les processus en cours d'exécution sur le système." },
-                { question: "top", port: "Monitoring", title: "Table of Processes", answer: "Moniteur temps réel de l'utilisation CPU, mémoire et processus actifs." },
-                { question: "htop", port: "Monitoring", title: "Interactive Process Viewer", answer: "Version améliorée de top avec interface colorée et interactive." },
-                { question: "netstat", port: "Réseau", title: "Network Statistics", answer: "Affiche les connexions réseau, tables de routage et statistiques interfaces." },
-                { question: "ss", port: "Réseau", title: "Socket Statistics", answer: "Remplaçant moderne de netstat pour afficher les sockets réseau." },
-                { question: "lsof", port: "Fichiers", title: "List Open Files", answer: "Affiche les fichiers ouverts par les processus et utilisateurs." },
-                { question: "mount", port: "Système fichiers", title: "Mount", answer: "Commande pour monter des systèmes de fichiers dans l'arborescence." },
-                { question: "fdisk", port: "Partitioning", title: "Fixed Disk", answer: "Utilitaire de partitionnement des disques durs sous Linux." },
-                { question: "LVM", port: "Stockage", title: "Logical Volume Manager", answer: "Gestionnaire de volumes logiques pour gestion flexible du stockage." },
-                { question: "systemd", port: "Init", title: "System Daemon", answer: "Système d'initialisation moderne gérant services, montages et événements." },
-                { question: "journalctl", port: "Logs", title: "Journal Control", answer: "Commande pour consulter les logs du journal systemd." },
-                { question: "SELinux", port: "Sécurité", title: "Security-Enhanced Linux", answer: "Module de sécurité Linux implémentant contrôle d'accès obligatoire." },
-                { question: "AppArmor", port: "Sécurité", title: "Application Armor", answer: "Système de sécurité Linux limitant les capacités des programmes." },
-                { question: "ufw", port: "Pare-feu", title: "Uncomplicated Firewall", answer: "Interface simplifiée pour configurer le pare-feu iptables sous Ubuntu." },
-                { question: "Apache", port: "Port 80/443", title: "Apache HTTP Server", answer: "Serveur web open source le plus utilisé au monde." },
-                { question: "Nginx", port: "Port 80/443", title: "Engine X", answer: "Serveur web haute performance et proxy inverse très efficace." },
-                { question: "MySQL", port: "Port 3306", title: "My Structured Query Language", answer: "Système de gestion de base de données relationnelle open source." },
-                { question: "PostgreSQL", port: "Port 5432", title: "Post-gres SQL", answer: "SGBD relationnel objet avancé avec conformité SQL étendue." },
-                { question: "Docker", port: "Conteneurs", title: "Docker Engine", answer: "Plateforme de conteneurisation pour déployer applications dans des environnements isolés." },
-                { question: "Kubernetes", port: "Orchestration", title: "K8s", answer: "Orchestrateur de conteneurs pour automatiser déploiement, mise à l'échelle et gestion." },
-                { question: "Git", port: "Versioning", title: "Git Version Control", answer: "Système de contrôle de version distribué pour gérer le code source." },
-                { question: "Shell Script", port: "Scripting", title: "Script Shell", answer: "Scripts exécutables pour automatiser tâches et administration système Linux." },
-                { question: "Package Manager", port: "Gestion", title: "Gestionnaire de paquets", answer: "Outil pour installer, mettre à jour et supprimer logiciels (apt, yum, dnf)." },
-                { question: "Repository", port: "Dépôt", title: "Dépôt de paquets", answer: "Serveur contenant les paquets logiciels d'une distribution Linux." },
-                { question: "Kernel", port: "Noyau", title: "Noyau Linux", answer: "Cœur du système d'exploitation gérant matériel et ressources système." },
-                { question: "Init System", port: "Initialisation", title: "Système d'init", answer: "Premier processus lancé au démarrage gérant tous les autres services." },
-                { question: "Load Average", port: "Performance", title: "Charge système", answer: "Métrique indiquant la charge moyenne du système sur 1, 5 et 15 minutes." },
-                { question: "Swap", port: "Mémoire", title: "Espace d'échange", answer: "Espace disque utilisé comme extension de la mémoire vive." },
-                { question: "File Permissions", port: "Sécurité", title: "Permissions fichiers", answer: "Système de droits d'accès Unix (lecture, écriture, exécution) par utilisateur/groupe." },
-                { question: "Inode", port: "Système fichiers", title: "Index Node", answer: "Structure de données contenant métadonnées d'un fichier (permissions, dates, taille)." }
-            ],
+				// Couche 2 – Liaison / Data Link
+				{ question: "ARP", port: "Couche 2", title: "Address Resolution Protocol", answer: "Protocole pour associer une adresse IP à une adresse MAC sur un réseau local." },
+				{ question: "OUI", port: "Adresse MAC", title: "Organizationally Unique Identifier", answer: "Identifiant unique de 3 octets attribué aux fabricants d'équipements réseau." },
+				{ question: "VLAN", port: "Couche 2", title: "Virtual Local Area Network", answer: "Segmentation logique d'un réseau physique en plusieurs réseaux virtuels." },
+				{ question: "Access Port", port: "Switch", title: "Port d'accès", answer: "Port de switch appartenant à un seul VLAN, sans étiquetage." },
+				{ question: "Trunk Port", port: "Switch", title: "Port trunk", answer: "Port transportant plusieurs VLANs avec étiquetage 802.1Q ou ISL." },
+				{ question: "Native VLAN", port: "Trunking", title: "VLAN natif", answer: "VLAN non étiqueté sur une liaison trunk, par défaut VLAN 1." },
+				{ question: "CDP", port: "Couche 2", title: "Cisco Discovery Protocol", answer: "Protocole propriétaire Cisco pour découvrir les équipements réseau adjacents." },
+				{ question: "LLDP", port: "Couche 2", title: "Link Layer Discovery Protocol", answer: "Protocole standard pour découvrir les équipements réseau voisins." },
+				{ question: "STP", port: "Couche 2", title: "Spanning Tree Protocol", answer: "Protocole prévenant les boucles dans les réseaux commutés redondants." },
+				{ question: "RSTP", port: "IEEE 802.1w", title: "Rapid Spanning Tree Protocol", answer: "Version accélérée de STP avec convergence plus rapide." },
+				{ question: "PVST+", port: "Cisco", title: "Per-VLAN Spanning Tree Plus", answer: "Implémentation Cisco de STP avec une instance par VLAN." },
+				{ question: "VTP", port: "Couche 2", title: "VLAN Trunking Protocol", answer: "Protocole Cisco pour synchroniser la configuration VLAN entre switches." },
+				{ question: "DTP", port: "Couche 2", title: "Dynamic Trunk Protocol", answer: "Protocole Cisco pour négocier automatiquement les liens trunk entre switches." },
+			
+				// Couche 2.5 – MPLS
+				{ question: "MPLS", port: "Couche 2.5", title: "Multiprotocol Label Switching", answer: "Technique de commutation par étiquettes pour optimiser le routage réseau." },
+			
+				// Couche 3 – Réseau
+				{ question: "IP", port: "Couche 3", title: "Internet Protocol", answer: "Protocole de routage des paquets de données à travers les réseaux." },
+				{ question: "NAT", port: "Couche 3", title: "Network Address Translation", answer: "Traduction d'adresses réseau pour partager une IP publique entre plusieurs machines." },
+				{ question: "PAT", port: "Couche 3", title: "Port Address Translation", answer: "Extension de NAT utilisant les ports pour multiplexer les connexions." },
+				{ question: "Inter-VLAN Routing", port: "Couche 3", title: "Routage inter-VLAN", answer: "Routage du trafic entre différents VLANs via routeur ou switch multicouche." },
+				{ question: "Router on a Stick", port: "Topologie", title: "Routeur sur bâton", answer: "Configuration utilisant un seul routeur pour router entre VLANs via sous-interfaces." },
+			
+				// Protocoles de routage
+				{ question: "RIP", port: "Port 520", title: "Routing Information Protocol", answer: "Protocole de routage à vecteur de distance, limité à 15 sauts maximum." },
+				{ question: "OSPF", port: "Routage", title: "Open Shortest Path First", answer: "Protocole de routage à état de liens utilisant l'algorithme de Dijkstra." },
+				{ question: "EIGRP", port: "Routage", title: "Enhanced Interior Gateway Routing Protocol", answer: "Protocole de routage hybride Cisco combinant vecteur distance et état de liens." },
+				{ question: "Distance Administrative", port: "Routage", title: "Administrative Distance", answer: "Métrique de fiabilité des sources de routage (0=connecté, 1=statique, 110=OSPF)." },
+			
+				// Couche 4 – Transport
+				{ question: "TCP", port: "Couche 4", title: "Transmission Control Protocol", answer: "Protocole de transport fiable avec contrôle de flux et détection d'erreurs." },
+				{ question: "UDP", port: "Couche 4", title: "User Datagram Protocol", answer: "Protocole de transport rapide sans garantie de livraison, utilisé pour le streaming." },
+				{ question: "HSRP", port: "UDP 1985", title: "Hot Standby Router Protocol", answer: "Protocole Cisco de redondance pour assurer la haute disponibilité des routeurs." },
+			
+				// Agrégation de liens
+				{ question: "PAGP", port: "Agrégation", title: "Port Aggregation Protocol", answer: "Protocole propriétaire Cisco pour agréger plusieurs liens physiques en un lien logique." },
+				{ question: "LACP", port: "IEEE 802.3ad", title: "Link Aggregation Control Protocol", answer: "Protocole standard pour agréger plusieurs liens Ethernet en un seul lien logique." },
+				{ question: "EtherChannel", port: "Agrégation", title: "EtherChannel", answer: "Technologie Cisco d'agrégation de liens pour augmenter bande passante et redondance." },
+			
+				// Sécurité et contrôle
+				{ question: "ACL", port: "Sécurité", title: "Access Control List", answer: "Liste de règles filtrant le trafic réseau selon critères définis." },
+				{ question: "Port Security", port: "Sécurité", title: "Sécurité de port", answer: "Fonctionnalité limitant et contrôlant les adresses MAC sur un port de switch." },
+				{ question: "DHCP Snooping", port: "Sécurité", title: "DHCP Snooping", answer: "Fonctionnalité de sécurité filtrant les messages DHCP non autorisés." },
+				{ question: "ARP Inspection", port: "Sécurité", title: "Dynamic ARP Inspection", answer: "Protection contre les attaques ARP spoofing en validant les bindings ARP." },
+			
+				// Qualité de service
+				{ question: "QoS", port: "Qualité", title: "Quality of Service", answer: "Mécanismes de priorisation du trafic pour garantir qualité de service." },
+				{ question: "CoS", port: "Priorité", title: "Class of Service", answer: "Marquage de priorité au niveau couche 2 (802.1p) dans l'en-tête Ethernet." }
+			],       
+			windows: [
+				// Outils de base / ligne de commande
+				{ question: "CMD", port: "Outil", title: "Invite de commandes", answer: "Interface en ligne de commande pour exécuter des commandes système Windows." },
+				{ question: "PowerShell", port: "Outil", title: "Windows PowerShell", answer: "Shell avancé et langage de script pour l'administration système Windows." },
+				{ question: "Sysprep", port: "Outil", title: "System Preparation", answer: "Outil pour préparer une installation Windows au clonage ou déploiement." },
+				{ question: "MMC", port: "Console", title: "Microsoft Management Console", answer: "Framework d'administration hébergeant les snap-ins de gestion Windows." },
+			
+				// Base de données / configuration système
+				{ question: "Registry", port: "Base de données", title: "Registre Windows", answer: "Base de données hiérarchique stockant les paramètres de configuration du système." },
+				{ question: "NTDS", port: "Base AD", title: "NT Directory Services", answer: "Base de données Active Directory stockée dans le fichier ntds.dit." },
+			
+				// Services Windows
+				{ question: "Active Directory", port: "Service", title: "AD", answer: "Service d'annuaire Microsoft pour la gestion centralisée des utilisateurs et ressources." },
+				{ question: "Group Policy", port: "Gestion", title: "Stratégie de groupe", answer: "Système de configuration centralisée des paramètres utilisateurs et ordinateurs." },
+				{ question: "WMI", port: "Gestion", title: "Windows Management Instrumentation", answer: "Infrastructure pour la surveillance et gestion des ressources système Windows." },
+				{ question: "WinRM", port: "Port 5985/5986", title: "Windows Remote Management", answer: "Service de gestion à distance basé sur les standards WS-Management." },
+				{ question: "SCCM", port: "Gestion", title: "System Center Configuration Manager", answer: "Solution Microsoft de gestion centralisée des postes et serveurs." },
+				{ question: "MDT", port: "Déploiement", title: "Microsoft Deployment Toolkit", answer: "Outil pour automatiser le déploiement et l'installation de systèmes Windows." },
+				{ question: "WDS", port: "Déploiement", title: "Windows Deployment Services", answer: "Service de déploiement d'images Windows via le réseau (PXE boot)." },
+				{ question: "SVCMM", port: "Gestion", title: "System Center Virtual Machine Manager", answer: "Outil de gestion centralisée des environnements virtualisés Hyper-V." },
+				{ question: "FSRM", port: "Gestion", title: "File Server Resource Manager", answer: "Outils de gestion, quotas et classification des ressources de stockage." },
+			
+				// Virtualisation / haute disponibilité
+				{ question: "Hyper-V", port: "Virtualisation", title: "Hyper-V", answer: "Hyperviseur natif Windows pour créer et gérer des machines virtuelles." },
+				{ question: "NLB", port: "Équilibrage", title: "Network Load Balancing", answer: "Répartition de charge réseau entre plusieurs serveurs Windows." },
+				{ question: "WSFC", port: "Cluster", title: "Windows Server Failover Clustering", answer: "Technologie de clustering Microsoft pour haute disponibilité des services." },
+			
+				// Serveurs et services réseau
+				{ question: "IIS", port: "Port 80/443", title: "Internet Information Services", answer: "Serveur web Microsoft pour héberger des sites web et applications." },
+				{ question: "IIS Manager", port: "Gestion Web", title: "Gestionnaire IIS", answer: "Console d'administration pour configurer sites web et applications IIS." },
+				{ question: "Exchange", port: "Port 25/443", title: "Microsoft Exchange", answer: "Serveur de messagerie Microsoft avec calendrier et collaboration." },
+				{ question: "RDS", port: "Bureau distant", title: "Remote Desktop Services", answer: "Services de bureau à distance pour accès multi-utilisateurs aux applications." },
+				{ question: "DHCP", port: "Port 67/68", title: "Dynamic Host Configuration Protocol", answer: "Service réseau attribuant automatiquement des adresses IP aux clients." },
+				{ question: "DNS Server", port: "Port 53", title: "Serveur DNS", answer: "Service de résolution de noms pour traduire les noms de domaine en adresses IP." },
+			
+				// Sécurité / authentification
+				{ question: "Kerberos", port: "Authentification", title: "Protocole Kerberos", answer: "Protocole d’authentification réseau sécurisé utilisé dans Active Directory." },
+				{ question: "NTLM", port: "Authentification", title: "NT LAN Manager", answer: "Protocole d’authentification plus ancien, remplacé par Kerberos dans AD." },
+				{ question: "BitLocker", port: "Sécurité", title: "BitLocker Drive Encryption", answer: "Chiffrement complet du disque pour protéger les données." },
+				{ question: "AppLocker", port: "Sécurité", title: "Application Control", answer: "Contrôle des applications autorisées à s’exécuter sur les postes Windows." },
+			
+				// Composants système / processus critiques
+				{ question: "lsass.exe", port: "Processus", title: "Local Security Authority Subsystem Service", answer: "Gère la sécurité locale, les connexions utilisateur et l’application des politiques de sécurité." },
+				{ question: "svchost.exe", port: "Processus", title: "Service Host", answer: "Processus générique hébergeant des services Windows multiples." },
+				{ question: "UAC", port: "Sécurité", title: "User Account Control", answer: "Composant qui limite les droits des utilisateurs et demande confirmation pour actions critiques." },
+				{ question: "conhost.exe", port: "Processus", title: "Console Host", answer: "Interface permettant l’interaction entre la console et l’interface graphique Windows." },
+				{ question: "csrss.exe", port: "Processus", title: "Client/Server Runtime Subsystem", answer: "Gère l’affichage console et les threads utilisateur dans Windows." },
+				{ question: "dwm.exe", port: "Processus", title: "Desktop Window Manager", answer: "Gère les effets graphiques et le rendu de l’interface utilisateur Windows." },
+				{ question: "winload.exe", port: "Processus", title: "Windows Boot Loader", answer: "Composant chargé de démarrer le noyau Windows et les pilotes pendant le boot." },
+			
+				// Autres notions intéressantes
+				{ question: "Event Viewer", port: "Outil", title: "Observateur d'événements", answer: "Outil pour analyser les journaux système, sécurité et application." },
+				{ question: "Task Scheduler", port: "Outil", title: "Planificateur de tâches", answer: "Service pour automatiser l’exécution de scripts et applications à des horaires définis." },
+				{ question: "Remote Registry", port: "Service", title: "Registre à distance", answer: "Permet d’accéder et de modifier le registre Windows d’une machine distante." }
+			],
+			linux: [
+				{ question: "chmod", port: "Commande", title: "Change Mode", answer: "Commande pour modifier les permissions d'accès aux fichiers et dossiers." },
+				{ question: "chown", port: "Commande", title: "Change Owner", answer: "Commande pour changer le propriétaire et le groupe d’un fichier ou dossier." },
+				{ question: "grep", port: "Commande", title: "Global Regular Expression Print", answer: "Outil de recherche de texte utilisant des expressions régulières." },
+				{ question: "awk", port: "Commande", title: "AWK Text Processing", answer: "Outil pour filtrer et transformer des textes ou données structurées." },
+				{ question: "sed", port: "Commande", title: "Stream Editor", answer: "Éditeur de flux pour transformer du texte dans des fichiers ou pipelines." },
+				{ question: "crontab", port: "Service", title: "Cron Table", answer: "Système de planification de tâches automatiques sous Unix/Linux." },
+				{ question: "systemctl", port: "Commande", title: "System Control", answer: "Commande pour gérer les services système avec systemd." },
+				{ question: "journalctl", port: "Logs", title: "Journal Control", answer: "Commande pour consulter les logs du journal systemd." },
+				{ question: "sudo", port: "Commande", title: "Substitute User Do", answer: "Permet d'exécuter des commandes avec les privilèges d'un autre utilisateur." },
+				{ question: "ss", port: "Réseau", title: "Socket Statistics", answer: "Remplaçant moderne de netstat pour afficher les sockets réseau." },
+				{ question: "iptables", port: "Pare-feu", title: "IP Tables", answer: "Outil de configuration du pare-feu Linux pour filtrer les paquets réseau." },
+				{ question: "firewalld", port: "Pare-feu", title: "Firewall Daemon", answer: "Service dynamique de gestion de pare-feu sous Linux utilisant zones et règles." },
+				{ question: "SELinux", port: "Sécurité", title: "Security-Enhanced Linux", answer: "Module de sécurité Linux implémentant contrôle d'accès obligatoire." },
+				{ question: "ssh-keygen", port: "Sécurité", title: "SSH Key Generator", answer: "Utilitaire pour générer des paires de clés publique/privée SSH." },
+				{ question: "rsync", port: "Synchronisation", title: "Remote Sync", answer: "Outil de synchronisation et sauvegarde de fichiers locale ou distante." },
+				{ question: "tar", port: "Archive", title: "Tape Archive", answer: "Utilitaire d'archivage pour créer et extraire des archives de fichiers." },
+				{ question: "vi/vim", port: "Éditeur", title: "Vi Improved", answer: "Éditeur de texte modal puissant disponible sur tous les systèmes Unix/Linux." },
+				{ question: "nano", port: "Éditeur", title: "Nano Editor", answer: "Éditeur de texte simple et facile à utiliser sur terminal Linux." },
+				{ question: "bash", port: "Shell", title: "Bourne Again Shell", answer: "Shell par défaut sur la plupart des distributions Linux avec scripting avancé." },
+				{ question: "zsh", port: "Shell", title: "Z Shell", answer: "Shell moderne avec fonctionnalités avancées et personnalisation poussée." },
+				{ question: "ps", port: "Processus", title: "Process Status", answer: "Commande affichant les processus en cours d'exécution sur le système." },
+				{ question: "lsof", port: "Fichiers", title: "List Open Files", answer: "Affiche les fichiers ouverts par les processus et utilisateurs." },
+				{ question: "mount", port: "Système fichiers", title: "Mount", answer: "Commande pour monter des systèmes de fichiers dans l'arborescence." },
+				{ question: "umount", port: "Système fichiers", title: "Unmount", answer: "Commande pour démonter un système de fichiers monté." },
+				{ question: "fdisk", port: "Partitioning", title: "Fixed Disk", answer: "Utilitaire de partitionnement des disques durs sous Linux." },
+				{ question: "parted", port: "Partitioning", title: "Partition Editor", answer: "Outil moderne pour créer, modifier et gérer les partitions de disque." },
+				{ question: "LVM", port: "Stockage", title: "Logical Volume Manager", answer: "Gestionnaire de volumes logiques pour gestion flexible du stockage." },
+				{ question: "Kernel", port: "Noyau", title: "Noyau Linux", answer: "Cœur du système d'exploitation gérant matériel et ressources système." },
+				{ question: "Init System", port: "Initialisation", title: "Système d'init", answer: "Premier processus lancé au démarrage gérant tous les autres services." },
+				{ question: "systemd", port: "Init", title: "System Daemon", answer: "Système d'initialisation moderne gérant services, montages et événements." },
+				{ question: "Swap", port: "Mémoire", title: "Espace d'échange", answer: "Espace disque utilisé comme extension de la mémoire vive." },
+				{ question: "File Permissions", port: "Sécurité", title: "Permissions fichiers", answer: "Système de droits d'accès Unix (lecture, écriture, exécution) par utilisateur/groupe." },
+				{ question: "Inode", port: "Système fichiers", title: "Index Node", answer: "Structure de données contenant métadonnées d'un fichier (permissions, dates, taille)." },
+				{ question: "cgroups", port: "Isolation", title: "Control Groups", answer: "Mécanisme du kernel pour limiter et isoler l’usage CPU, mémoire et I/O d’un groupe de processus." },
+				{ question: "namespaces", port: "Isolation", title: "Linux Namespaces", answer: "Isolation des processus, réseau et systèmes de fichiers pour conteneurs et sécurité." },
+			],
             security: [
-                { question: "SSL/TLS", port: "Protocole", title: "Secure Sockets Layer", answer: "Protocoles de chiffrement pour sécuriser les communications réseau." },
-                { question: "Firewall", port: "Sécurité", title: "Pare-feu", answer: "Système de protection réseau filtrant le trafic selon des règles prédéfinies." },
-                { question: "VPN", port: "Réseau", title: "Virtual Private Network", answer: "Réseau privé virtuel créant un tunnel sécurisé sur Internet." },
-                { question: "2FA", port: "Authentification", title: "Two-Factor Authentication", answer: "Méthode d'authentification utilisant deux facteurs différents pour plus de sécurité." },
-                { question: "Hash", port: "Cryptographie", title: "Fonction de hachage", answer: "Fonction mathématique convertissant des données en empreinte numérique unique." },
-                { question: "IPSec", port: "Couche 3", title: "Internet Protocol Security", answer: "Suite de protocoles pour sécuriser les communications IP par chiffrement et authentification." },
-                { question: "SSL VPN", port: "Port 443", title: "SSL Virtual Private Network", answer: "VPN utilisant le protocole SSL/TLS pour sécuriser les connexions distantes." },
-                { question: "IEEE 802.1AE", port: "Couche 2", title: "MACsec", answer: "Standard de chiffrement au niveau liaison de données pour sécuriser les trames Ethernet." },
-                { question: "Kerberos", port: "Port 88", title: "Kerberos", answer: "Protocole d'authentification réseau utilisant des tickets pour sécuriser les communications." },
-                { question: "NTLM", port: "Authentification", title: "NT LAN Manager", answer: "Protocole d'authentification Microsoft pour les réseaux Windows." },
-                { question: "C2C", port: "Variable", title: "Client-To-Client Protocol", answer: "Protocole permettant la communication directe entre clients sans serveur intermédiaire." }
-            ],
+				// Normes et cadre
+				{ question: "ISO 27001", port: "Norme", title: "Système de management de la sécurité de l'information", answer: "Norme définissant les exigences pour établir, mettre en œuvre et améliorer la sécurité de l'information." },
+				{ question: "ISO 27002", port: "Norme", title: "Code de bonnes pratiques", answer: "Norme fournissant les bonnes pratiques pour les contrôles de sécurité de l’information." },
+				{ question: "RGPD", port: "Règlement", title: "Règlement Général sur la Protection des Données", answer: "Réglementation européenne sur la protection des données personnelles." },
+				{ question: "ANSSI", port: "Agence", title: "Agence Nationale de la Sécurité des Systèmes d’Information", answer: "Organisme français chargé de la sécurité informatique et de la cybersécurité." },
+			
+				// Cryptographie et communication sécurisée
+				{ question: "PKI", port: "Infrastructure", title: "Public Key Infrastructure", answer: "Infrastructure pour gérer les certificats numériques et la cryptographie asymétrique." },
+				{ question: "AES-256", port: "Chiffrement symétrique", title: "Advanced Encryption Standard 256 bits", answer: "Algorithme de chiffrement symétrique très sécurisé utilisant une clé de 256 bits, largement utilisé pour protéger les données sensibles." },
+				{ question: "RSA", port: "Chiffrement asymétrique", title: "Rivest–Shamir–Adleman", answer: "Algorithme de chiffrement asymétrique utilisant une paire de clés publique/privée, utilisé pour sécuriser les échanges et signatures numériques." },
+				{ question: "SHA-256", port: "Hachage", title: "Secure Hash Algorithm 256 bits", answer: "Fonction de hachage cryptographique produisant un résumé unique de 256 bits, utilisée pour vérifier l'intégrité des données." },
+				{ question: "TLS", port: "Chiffrement des communications", title: "Transport Layer Security", answer: "Protocole de sécurisation des communications réseau via chiffrement, authentification et intégrité des données, successeur de SSL." },
+				{ question: "SSL", port: "Chiffrement des communications", title: "Secure Sockets Layer", answer: "Ancien protocole de sécurisation des communications réseau, remplacé par TLS pour plus de sécurité." },
+				
+				// Types de menaces
+				{ question: "Virus", port: "Malware", title: "Virus informatique", answer: "Programme malveillant se reproduisant et pouvant infecter d’autres fichiers ou systèmes." },
+				{ question: "Cheval de Troie", port: "Malware", title: "Trojan", answer: "Programme malveillant déguisé en application légitime pour tromper l’utilisateur." },
+				{ question: "Vers", port: "Malware", title: "Worm", answer: "Programme autonome se propageant sur les réseaux sans intervention humaine." },
+				{ question: "Man in the Middle", port: "Attaque", title: "Attaque MITM", answer: "Interception et modification des communications entre deux parties à leur insu." },
+				{ question: "Attaque DoS", port: "Attaque", title: "Denial of Service", answer: "Surcharge d’un service pour le rendre indisponible aux utilisateurs légitimes." },
+				{ question: "Attaque DDoS", port: "Attaque", title: "Distributed Denial of Service", answer: "DoS lancé depuis plusieurs machines simultanément pour maximiser l’impact." },
+				{ question: "Brute Force", port: "Attaque", title: "Attaque par force brute", answer: "Essai systématique de toutes les combinaisons possibles pour deviner un mot de passe." },
+			
+				// Contrôles et bonnes pratiques
+				{ question: "VPN", port: "Réseau", title: "Virtual Private Network", answer: "Réseau privé virtuel créant un tunnel sécurisé sur Internet." },
+				{ question: "VPN IPSec", port: "Couche 3", title: "Internet Protocol Security", answer: "Suite de protocoles pour sécuriser les communications IP par chiffrement et authentification." },
+				{ question: "SSL VPN", port: "Port 443", title: "SSL Virtual Private Network", answer: "VPN utilisant le protocole SSL/TLS pour sécuriser les connexions distantes." },
+				{ question: "2FA", port: "Authentification", title: "Two-Factor Authentication", answer: "Méthode d'authentification utilisant deux facteurs différents pour plus de sécurité." },
+				{ question: "MFA", port: "Authentification", title: "Multi-Factor Authentication", answer: "Méthode d’authentification utilisant plusieurs 3 facteurs ou plus, selon le niveau de sécurité désiré (EX: mot de passe (facteur 1) + code OTP sur mobile (facteur 2) + empreinte digitale (facteur 3)) pour sécuriser l'acces." },
+				{ question: "IDS / IPS", port: "Détection", title: "Intrusion Detection / Prevention System", answer: "Système de détection et prévention des intrusions réseau ou systèmes." },
+				{ question: "Honeypot", port: "Sécurité proactive", title: "Honeypot", answer: "Système fictif destiné à attirer les attaquants pour analyser leurs méthodes." },
+				{ question: "Chiffrement", port: "Protection", title: "Encryption", answer: "Technique pour transformer des données lisibles en données illisibles pour protéger leur confidentialité." }
+			],
             vmware: [
                 { question: "vSphere", port: "Plateforme", title: "VMware vSphere", answer: "Suite de virtualisation complète incluant ESXi et vCenter pour gérer l'infrastructure virtuelle." },
                 { question: "ESXi", port: "Hyperviseur", title: "Elastic Sky X Integrated", answer: "Hyperviseur bare-metal de type 1 qui s'installe directement sur le serveur physique." },
@@ -652,39 +688,45 @@
                 { question: "exFAT", port: "Système fichiers", title: "Extended FAT", answer: "Extension de FAT32 supprimant la limite de 4GB, optimisé pour supports amovibles." },
                 { question: "ext4", port: "Système fichiers", title: "Fourth Extended Filesystem", answer: "Système de fichiers Linux avec journalisation et support de gros volumes." },
                 { question: "ZFS", port: "Système fichiers", title: "Zettabyte File System", answer: "Système de fichiers avancé avec intégrité des données, snapshots et compression." },
+                { question: "DFS", port: "Namespace", title: "Distributed File System", answer: "Système de fichiers distribué unifiant l'accès aux partages réseau." },
                 { question: "RAID 0", port: "Agrégation", title: "Striping", answer: "Répartition des données sur plusieurs disques pour améliorer les performances." },
                 { question: "RAID 1", port: "Miroir", title: "Mirroring", answer: "Duplication exacte des données sur deux disques pour la redondance." },
                 { question: "RAID 5", port: "Parité", title: "Striping with Parity", answer: "Répartition avec parité permettant de tolérer la panne d'un disque." },
                 { question: "RAID 10", port: "Hybride", title: "RAID 1+0", answer: "Combinaison de RAID 1 et RAID 0 pour performance et redondance." },
                 { question: "LVM", port: "Linux", title: "Logical Volume Manager", answer: "Gestionnaire de volumes logiques pour une gestion flexible du stockage Linux." },
                 { question: "iSCSI", port: "Port 3260", title: "Internet SCSI", answer: "Protocole de stockage transportant les commandes SCSI sur IP." },
-                { question: "Fibre Channel", port: "Réseau", title: "FC", answer: "Technologie réseau haute vitesse pour connecter serveurs et stockage SAN." },
                 { question: "FCoE", port: "Convergence", title: "Fibre Channel over Ethernet", answer: "Transport du protocole Fibre Channel sur infrastructure Ethernet 10Gb." },
                 { question: "CIFS", port: "Port 445", title: "Common Internet File System", answer: "Protocole Microsoft pour le partage de fichiers et imprimantes sur réseau." },
                 { question: "SMB", port: "Port 445", title: "Server Message Block", answer: "Protocole de partage de fichiers, base de CIFS, utilisé par Windows." },
                 { question: "NFS", port: "Port 2049", title: "Network File System", answer: "Système de fichiers distribué permettant le montage distant sous Unix/Linux." },
                 { question: "LUN", port: "Stockage", title: "Logical Unit Number", answer: "Unité logique de stockage présentée par un contrôleur SCSI ou SAN." },
                 { question: "Snapshot", port: "Image", title: "Instantané", answer: "Copie point-in-time d'un volume de stockage ou système de fichiers." },
-                { question: "Backup", port: "Sauvegarde", title: "Sauvegarde", answer: "Copie de sécurité des données pour protection contre la perte ou corruption." },
-                { question: "Clone", port: "Duplication", title: "Clonage", answer: "Copie exacte et indépendante d'un volume ou LUN de stockage." },
-                { question: "Déduplication", port: "Optimisation", title: "Data Deduplication", answer: "Élimination des données dupliquées pour optimiser l'utilisation du stockage." },
-                { question: "Compression", port: "Optimisation", title: "Compression de données", answer: "Réduction de la taille des données stockées pour économiser l'espace." },
-                { question: "Tiering", port: "Hiérarchisation", title: "Storage Tiering", answer: "Placement automatique des données sur différents types de stockage selon l'usage." },
                 { question: "SSD", port: "Support", title: "Solid State Drive", answer: "Disque de stockage utilisant la mémoire flash, plus rapide que les disques mécaniques." },
                 { question: "HDD", port: "Support", title: "Hard Disk Drive", answer: "Disque dur mécanique utilisant des plateaux magnétiques rotatifs." },
                 { question: "SAS", port: "Interface", title: "Serial Attached SCSI", answer: "Interface série haute performance pour connecter disques et contrôleurs." },
                 { question: "SATA", port: "Interface", title: "Serial ATA", answer: "Interface série standard pour connecter disques durs et SSD aux cartes mères." },
                 { question: "SCSI", port: "Interface", title: "Small Computer System Interface", answer: "Interface parallèle pour connecter périphériques de stockage haute performance." },
                 { question: "FC-AL", port: "Topologie", title: "Fibre Channel Arbitrated Loop", answer: "Topologie Fibre Channel en boucle partagée jusqu'à 126 périphériques." },
-                { question: "Object Storage", port: "Paradigme", title: "Stockage Objet", answer: "Stockage de données comme objets avec métadonnées, scalable massivement." },
-                { question: "Block Storage", port: "Paradigme", title: "Stockage Bloc", answer: "Stockage de données en blocs de taille fixe, utilisé par systèmes de fichiers." },
-                { question: "File Storage", port: "Paradigme", title: "Stockage Fichier", answer: "Stockage hiérarchique traditionnel organisé en dossiers et fichiers." },
-                { question: "JBOD", port: "Configuration", title: "Just a Bunch of Disks", answer: "Configuration sans RAID où chaque disque est présenté individuellement." },
-                { question: "Hot Spare", port: "Redondance", title: "Disque de secours", answer: "Disque en attente qui remplace automatiquement un disque défaillant." },
-                { question: "IOPS", port: "Performance", title: "Input/Output Operations Per Second", answer: "Métrique mesurant le nombre d'opérations d'entrée/sortie par seconde." },
-                { question: "Latence", port: "Performance", title: "Latency", answer: "Temps de réponse entre une demande d'accès et la disponibilité des données." },
-                { question: "Throughput", port: "Performance", title: "Débit", answer: "Quantité de données transférées par unité de temps (MB/s ou GB/s)." }
-            ]
+            ],
+            Gestion_de_projet: [
+				// Rôles et responsabilités
+				{ question: "MOA", port: "Rôle", title: "Maîtrise d’Ouvrage", answer: "Personne ou entité définissant les besoins, les objectifs et validant le projet côté métier." },
+				{ question: "MOE", port: "Rôle", title: "Maîtrise d’Œuvre", answer: "Personne ou entité en charge de la réalisation technique et opérationnelle du projet." },
+				{ question: "RACI", port: "Responsabilité", title: "Responsable, Autorité, Consulté, Informé", answer: "Matrice définissant les rôles et responsabilités de chaque acteur sur les tâches d’un projet." },
+			
+				// Contrats et services
+				{ question: "SLA", port: "Contrat", title: "Service Level Agreement", answer: "Accord définissant le niveau de service attendu, les indicateurs et pénalités éventuelles." },
+				{ question: "OLA", port: "Contrat interne", title: "Operational Level Agreement", answer: "Accord interne entre équipes pour garantir les niveaux de service définis dans le SLA." },
+				{ question: "GTR", port: "Service", title: "Garantie de Temps de Rétablissement", answer: "Durée maximale prévue pour rétablir un service après incident." },
+				{ question: "GTI", port: "Service", title: "Garantie de Temps d’Intervention", answer: "Durée maximale prévue pour qu’une équipe intervienne suite à un incident." },
+			
+				// Indicateurs et performances
+				{ question: "KPI", port: "Indicateur", title: "Key Performance Indicator", answer: "Indicateur mesurant la performance d’un projet ou d’un processus par rapport aux objectifs." },
+				{ question: "ROI", port: "Indicateur financier", title: "Return on Investment", answer: "Mesure du retour sur investissement d’un projet ou d’une action, rapport bénéfices/coûts." },
+			
+				// Coûts et optimisation
+				{ question: "TCO", port: "Coût total", title: "Total Cost of Ownership", answer: "Coût total d’acquisition, d’exploitation et de maintenance d’un actif ou service sur sa durée de vie." }
+			]
         };
 
         let currentCategory = '';
@@ -767,7 +809,8 @@
                 linux: 'Linux',
                 security: 'Sécurité',
                 vmware: 'VMware',
-                storage: 'Stockage'
+                storage: 'Stockage',
+                Gestion_de_projet: 'Gestion de projet'
             };
             return names[category] || category;
         }
