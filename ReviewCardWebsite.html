@@ -76,6 +76,7 @@
         .category-btn.windows { background: linear-gradient(135deg, #287baa, #0400ff); }
         .category-btn.linux { background: linear-gradient(135deg, #000000, #000000); }
         .category-btn.Securite { background: linear-gradient(135deg, #02c232, #6be660); }
+        .category-btn.DNS { background: linear-gradient(55deg, #3b3937, #bbbcc0); }
         .category-btn.vmware { background: linear-gradient(55deg, #df7803, #052799); }
         .category-btn.storage { background: linear-gradient(135deg, #9b59b6, #450eaa); }
         .category-btn.Gestion_de_projet { background: linear-gradient(135deg, #0caca4, #3843a3); }
@@ -390,6 +391,10 @@
                     🐧 Linux
                     <span>→</span>
                 </button>
+                <button class="category-btn DNS" onclick="selectCategory('DNS')">
+                    🛣️ DNS
+                    <span>→</span>
+                </button>
                 <button class="category-btn Securite" onclick="selectCategory('Securite')">
                     🔒 Sécurité
                     <span>→</span>
@@ -476,6 +481,7 @@
                         <option value="network">Réseaux</option>
                         <option value="windows">Windows</option>
                         <option value="linux">Linux</option>
+                        <option value="DNS">DNS</option>
                         <option value="Securite">Sécurité</option>
                         <option value="vmware">VMware</option>
                         <option value="storage">Stockage</option>
@@ -528,6 +534,10 @@
             ],
             network: [
 				// Couche 2 – Liaison / Data Link
+                { question: "PAN", port: "Personnel", title: "Personal Area Network", answer: "Réseau à très courte portée (quelques mètres) reliant des appareils d’un même utilisateur : Bluetooth, USB, NFC, Zigbee. Sert à connecter un smartphone, casque, montre connectée etc.[web:19][web:29]" },
+                { question: "LAN", port: "Local", title: "Local Area Network", answer: "Réseau local couvrant un bâtiment ou un campus, basé sur Ethernet ou WiFi. Permet le partage de ressources et la communication rapide entre postes d’une même organisation.[web:19][web:30]" },
+                { question: "MAN", port: "Métropolitain", title: "Metropolitan Area Network", answer: "Réseau métropolitain reliant plusieurs LAN sur une ville ou une agglomération. Utilise souvent la fibre optique pour interconnecter plusieurs sites distants avec haut débit.[web:19][web:31]" },
+                { question: "WAN", port: "Étendu", title: "Wide Area Network", answer: "Réseau étendu à l’échelle d’un pays, d’un continent ou global : Internet, interconnexion d’agences multinationales. Utilise des liaisons terrestres, satellites et de multiples protocoles pour transporter les données à grande distance.[web:19][web:31]" },
                 { question: "Couche 1", port: "Physique", title: "Modèle OSI - Physique", answer: "Définit les caractéristiques électriques, optiques et mécaniques du support. Transmet les bits bruts sur le support physique." },
                 { question: "Couche 2", port: "Liaison de données", title: "Modèle OSI - Liaison", answer: "Encapsule les paquets en trames, délimite les transmissions, détecte et corrige les erreurs. Protocoles : Ethernet, PPP." },
                 { question: "Couche 3", port: "Réseau", title: "Modèle OSI - Réseau", answer: "Achemine les paquets en fonction des adresses IP, gère le routage, le contrôle de congestion et le découpage en fragments. Protocoles : IP, ICMP, OSPF." },
@@ -553,7 +563,8 @@
 				
 				// Couche 2.5 – MPLS
 				{ question: "MPLS", port: "Couche 2.5", title: "Multiprotocol Label Switching", answer: "Technique de commutation basée sur l'attribution d'étiquettes aux paquets pour un routage efficace, flexible et rapide au-delà de la couche réseau classique." },
-			
+                { question: "SD-WAN", port: "Réseau WAN", title: "Software Defined Wide Area Network", answer: "Technologie de gestion WAN par logiciel qui optimise et sécurise l’acheminement dynamique du trafic entre plusieurs connexions (MPLS, fibre, 4G/5G, internet). Permet le routage intelligent, l’agrégation des liens et la segmentation, pilotés depuis un contrôleur centralisé, avec tunnelisation IPSec et priorisation applicative." },
+
 				// Couche 3 – Réseau
 				{ question: "IP", port: "Couche 3", title: "Internet Protocol", answer: "Protocole principal de la couche réseau assurant le routage et l'acheminement des paquets de données entre réseaux distincts via des adresses IP." },
 				{ question: "NAT", port: "Couche 3", title: "Network Address Translation", answer: "Mécanisme permettant de modifier les adresses IP source ou destination dans les paquets pour partager une adresse IP publique entre plusieurs machines privées." },
@@ -713,7 +724,33 @@
 				{ question: "Honeypot", port: "Sécurité proactive", title: "Honeypot", answer: "Système délibérément vulnérable ou fictif utilisé pour attirer et analyser les comportements et attaques des cybercriminels." },
 				{ question: "Chiffrement", port: "Protection", title: "Encryption", answer: "Technique transformant des données lisibles en un format illisible sans la clé appropriée, garantissant la confidentialité et l’intégrité des informations." }
 			],
-			vmware: [
+			DNS: [
+				// Infrastructure DNS
+				{ question: "Serveurs racines", port: "13 serveurs", title: "Root Servers", answer: "Serveurs DNS de plus haut niveau dans la hiérarchie internet, au nombre de 13 identifiés par les lettres A à M. Ils contiennent les informations sur les serveurs autoritaires pour tous les domaines de premier niveau (TLD) et constituent le point de départ de toute résolution DNS." },
+				{ question: "FQDN", port: "Format", title: "Fully Qualified Domain Name", answer: "Nom de domaine complet spécifiant l'emplacement exact d'un objet dans la hiérarchie DNS, incluant le nom d'hôte, le domaine et tous les sous-domaines, terminé par un point (ex: www.exemple.com.)." },
+				{ question: "TLD", port: "Domaine", title: "Top Level Domain", answer: "Domaine de premier niveau dans la hiérarchie DNS, comme .com, .org, .fr, .edu. Géré par des registres spécialisés et constituant le niveau juste en dessous des serveurs racines." },
+				{ question: "Domaines", port: "Hiérarchie", title: "Domaines DNS", answer: "Espaces de noms hiérarchiques dans le système DNS, organisés en arbre depuis les domaines racines jusqu'aux sous-domaines, permettant une gestion décentralisée et une résolution structurée des noms." },
+				
+				// Types de zones
+				{ question: "Zone primaire", port: "Authoritative", title: "Zone DNS primaire", answer: "Zone DNS maître contenant les enregistrements originaux et autoritaires pour un domaine donné. Le serveur primaire a l'autorité complète pour modifier les enregistrements et effectuer les mises à jour." },
+				{ question: "Zone secondaire", port: "Slave", title: "Zone DNS secondaire", answer: "Copie en lecture seule d'une zone primaire, obtenue par transfert de zone depuis le serveur primaire. Assure la redondance et la répartition de charge pour la résolution DNS." },
+				{ question: "Zone de stub", port: "Delegation", title: "Zone stub", answer: "Zone contenant uniquement les enregistrements NS (Name Server) d'une zone déléguée, permettant de connaître les serveurs autoritaires pour un sous-domaine sans maintenir tous les enregistrements." },
+				
+				// Types de requêtes
+				{ question: "Requête itérative", port: "Non-recursive", title: "Requête DNS itérative", answer: "Méthode de résolution DNS où le client interroge directement chaque serveur DNS dans la hiérarchie, depuis les serveurs racines jusqu'au serveur autoritaire, gérant lui-même la chaîne complète de résolution." },
+				{ question: "Requête récursive", port: "Recursive", title: "Requête DNS récursive", answer: "Méthode où le serveur DNS prend en charge la résolution complète pour le client, interrogeant successivement les autres serveurs DNS si nécessaire et retournant la réponse finale au client." },
+				
+				// Types d'enregistrements DNS
+				{ question: "SOA", port: "Zone", title: "Start of Authority", answer: "Enregistrement définissant les paramètres administratifs d'une zone DNS : serveur primaire, email de l'administrateur, numéro de série, intervalles de rafraîchissement et d'expiration." },
+				{ question: "NS", port: "Name Server", title: "Name Server Record", answer: "Enregistrement spécifiant les serveurs DNS autoritaires pour un domaine ou sous-domaine donné, permettant la délégation et la distribution des zones DNS." },
+				{ question: "A", port: "IPv4", title: "Address Record", answer: "Enregistrement associant un nom de domaine à une adresse IPv4 (32 bits), constituant le type d'enregistrement le plus couramment utilisé pour la résolution de noms vers adresses IP." },
+				{ question: "AAAA", port: "IPv6", title: "IPv6 Address Record", answer: "Enregistrement associant un nom de domaine à une adresse IPv6 (128 bits), équivalent de l'enregistrement A pour le protocole IPv6." },
+				{ question: "CNAME", port: "Alias", title: "Canonical Name", answer: "Enregistrement créant un alias pointant vers un autre nom de domaine (nom canonique), permettant à plusieurs noms de pointer vers la même ressource sans dupliquer les autres enregistrements." },
+				{ question: "PTR", port: "Reverse", title: "Pointer Record", answer: "Enregistrement utilisé pour la résolution DNS inverse, associant une adresse IP à un nom de domaine dans les zones in-addr.arpa (IPv4) ou ip6.arpa (IPv6)." },
+				{ question: "MX", port: "Mail", title: "Mail Exchange Record", answer: "Enregistrement spécifiant les serveurs de messagerie responsables de recevoir les emails pour un domaine donné, incluant une priorité pour gérer les serveurs de secours." },
+				{ question: "SRV", port: "Service", title: "Service Record", answer: "Enregistrement définissant l'emplacement (hostname et port) de serveurs spécifiques pour des services particuliers, utilisé notamment pour la découverte automatique de services comme LDAP, SIP, XMPP." }
+			],
+            vmware: [
 				{ question: "vSphere", port: "Plateforme", title: "VMware vSphere", answer: "Suite complète de virtualisation permettant de gérer l’infrastructure virtuelle. Inclut ESXi, un hyperviseur bare-metal installé sur les serveurs, et vCenter pour la gestion centralisée des hôtes, machines virtuelles, stockage et réseau." },
 				{ question: "ESXi", port: "Hyperviseur", title: "Elastic Sky X Integrated", answer: "Hyperviseur de type 1 qui s’installe directement sur le serveur physique, permettant d’exécuter plusieurs machines virtuelles avec isolation et allocation optimisée des ressources." },
 				{ question: "vCenter", port: "Gestion", title: "vCenter Server", answer: "Plateforme de gestion centralisée pour administrer et superviser plusieurs hôtes ESXi et machines virtuelles à travers une interface unifiée, facilitant automatisation, contrôle et monitoring." },
@@ -937,6 +974,7 @@
                 windows: 'Windows',
                 linux: 'Linux',
                 Securite: 'Sécurité',
+                DNS: 'DNS',
                 vmware: 'VMware',
                 storage: 'Stockage',
                 Gestion_de_projet: 'Gestion de projet',
