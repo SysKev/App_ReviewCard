@@ -79,17 +79,18 @@
         .category-btn.vmware { background: linear-gradient(55deg, #df7803, #052799); }
         .category-btn.storage { background: linear-gradient(135deg, #9b59b6, #450eaa); }
         .category-btn.Gestion_de_projet { background: linear-gradient(135deg, #0caca4, #3843a3); }
+        .category-btn.schemas { background: linear-gradient(135deg, #8e44ad, #3f006e); }
         .category-btn.custom { background: linear-gradient(135deg, #f39c12, #e67e22); }
 
         .card-container {
             display: none;
-            padding: 20px;
+            padding: px;
             text-align: center;
         }
 
         .card {
             width: 100%;
-            height: 350px;
+            height: 320px;
             position: relative;
             margin: 20px auto;
             perspective: 1000px;
@@ -171,36 +172,31 @@
             gap: 15px;
         }
 
-		.btn {
-			background: linear-gradient(135deg, #3498db, #2980b9);
-			color: white;
-			border: none;
-			padding: 12px 20px;
-			border-radius: 50px; /* arrondi complet */
-			font-size: 16px;
-			cursor: pointer;
-			transition: all 0.3s ease;
-			box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* ombre douce */
-		}
-		
-		.btn:hover {
-			background: linear-gradient(135deg, #2980b9, #3498db); /* inversion */
-			transform: translateY(-3px); /* léger effet de levée */
-			box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-		}
-		
-		.btn:active {
-			transform: translateY(-1px); /* effet clic */
-			box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-		}
-
+        .btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+            background: linear-gradient(135deg, #2980b9, #3498db);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+        
+        .btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2);
         }
 
         .btn.secondary {
-            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            background: linear-gradient(35deg, #95a5a6, #7f8c8d);
         }
 
         .progress {
@@ -318,14 +314,61 @@
             cursor: not-allowed;
         }
         .answer {
-            white-space: pre-line; /* interprète les \n comme des retours à la ligne */
+            white-space: pre-line;
+        }
+
+        /* Styles pour les schémas */
+        .schema-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .kerberos-flow {
+            background: #2c3e50;
+            border-radius: 23px;
+            padding: 21px;
+            color: white;
+            font-size: 20px;
+            line-height: 1.1;
+            max-height: 520px;
+            overflow-y: auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .flow-step {
+            background: rgba(52, 152, 219, 0.3);
+            margin: 4px 0;
+            padding: 5px 6px;
+            border-radius: 4px;
+            border-left: 2px solid #3498db;
+            word-wrap: break-word;
+        }
+
+        .flow-entity {
+            color: #f39c12;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .flow-arrow {
+            text-align: center;
+            color: #e74c3c;
+            font-weight: bold;
+            margin: 2px 0;
+            font-size: 8px;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1> 🃏 Cartes pour révision ASR 🃏</h1>
+            <h1>🃏 Cartes pour révision ASR 🃏</h1>
             <p>Révisez l'informatique avec des cartes interactives </p>
         </div>
 
@@ -363,6 +406,10 @@
                     📚Gestion de projet
                     <span>→</span>
                 </button>
+                <button class="category-btn schemas" onclick="selectCategory('schemas')">
+                    📊 Schémas
+                    <span>→</span>
+                </button>
                 <button class="category-btn custom" onclick="showCustomManager()">
                     ⭐ Liste Personnalisée
                     <span>→</span>
@@ -387,7 +434,10 @@
                     <div class="card-back">
                         <div class="port" id="card-port">Port 22</div>
                         <h3 id="card-title">Secure Shell</h3>
-                        <p id="card-answer"class="answer">Protocole de communication sécurisé permettant de se connecter à distance à un serveur via un tunnel chiffré.</p>
+                        <div id="card-content">
+                            <p id="card-answer" class="answer">Protocole de communication sécurisé permettant de se connecter à distance à un serveur via un tunnel chiffré.</p>
+                            <div id="card-schema" class="schema-container" style="display: none;"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -426,10 +476,11 @@
                         <option value="network">Réseaux</option>
                         <option value="windows">Windows</option>
                         <option value="linux">Linux</option>
-                        <option value="Securite">Securite</option>
+                        <option value="Securite">Sécurité</option>
                         <option value="vmware">VMware</option>
                         <option value="storage">Stockage</option>
-                        <option value="gestion_de_projet">Gestion_de_projet</option>
+                        <option value="Gestion_de_projet">Gestion de projet</option>
+                        <option value="schemas">Schémas</option>
                     </select>
                 </div>
 
@@ -448,7 +499,7 @@
 
     <script>
         const cardData = {
-            protocols: [
+                        protocols: [
 				{ question: "SSH", port: "Port 22", title: "Secure Shell", answer: "Permet une administration distante et sécurisée d'un serveur via un canal chiffré, protégeant les informations échangées contre les interceptions. Supporte l’authentification forte par clé/ mot de passe et permet aussi de transférer des fichiers en toute confidentialité." },
 				{ question: "HTTP", port: "Port 80", title: "HyperText Transfer Protocol", answer: "Protocole fondamental du web pour la transmission client-serveur de contenus (pages, textes, images). Fonctionnant sans chiffrement, il reste vulnérable aux attaques de type interception et manipulation des données échangées." },
 				{ question: "HTTPS", port: "Port 443", title: "HTTP Secure", answer: "Version sécurisée de HTTP qui repose sur SSL/TLS pour garantir le chiffrement, l’authentification du site visitée et l’intégrité des échanges : indispensable pour les transactions ou communications sensibles." },
@@ -457,8 +508,6 @@
 				{ question: "SMTPS", port: "Port 465", title: "Simple Mail Transfer Protocol Secure", answer: "Déploie SMTP sur une connexion SSL/TLS pour chiffrer les emails expédiés, vérifie l’identité des serveurs et préserve les messages contre toute interception ou modification durant leur transmission." },
 				{ question: "DNS", port: "Port 53", title: "Domain Name System", answer: "Assure la conversion entre noms de domaine et adresses IP pour la navigation et la communication réseau. La sécurité peut être renforcée par DNSSEC qui protège contre les falsifications de réponse." },
 				{ question: "DHCP", port: "Port 67/68", title: "Dynamic Host Configuration Protocol", answer: "Automatise la distribution d’adresses IP et paramètres réseau aux ordinateurs d’un réseau local : simplifie la gestion et l’intégration tout en limitant les erreurs humaines." },
-				{ question: "L2TP", port: "Port 1701", title: "Layer 2 Tunneling Protocol", answer: "Permet la création de tunnels VPN pour faire passer des données privées sur un réseau public ; le chiffrement des données doit être assuré par une couche IPSec séparée." },
-				{ question: "L2TPv3", port: "Port 1701", title: "L2TP Version 3", answer: "Ajoute la prise en charge avancée de divers types de circuits virtuels : utilisé par les opérateurs pour transporter plusieurs technologies réseau sur une même infrastructure." },
 				{ question: "LDAP", port: "Port 389", title: "Lightweight Directory Access Protocol", answer: "Protocole standard pour interroger, modifier et administrer des annuaires centralisés (utilisateurs, groupes, ressources), essentiel à l’authentification et la gestion des accès dans de nombreux systèmes d’entreprise." },
 				{ question: "LDAPS", port: "Port 636", title: "LDAP over SSL", answer: "Offre les fonctions de LDAP mais sur une connexion chiffrée SSL/TLS : protège l’intégrité et la confidentialité des données d’annuaire (identités, mots de passe) contre toute interception malveillante." },
 				{ question: "LCP", port: "PPP", title: "Link Control Protocol", answer: "Gestionnaire des liens dans PPP : négocie, configure et termine la connexion, optimise les paramètres et peut demander l’authentification avant de transmettre la session principale." },
@@ -466,12 +515,10 @@
 				{ question: "PPTP", port: "Port 1723", title: "Point-to-Point Tunneling Protocol", answer: "Crée des tunnels VPN pour transporter les données sur IP ; désormais réputé peu sécurisé (faiblesses connues), il tend à être remplacé par des VPN plus robustes : L2TP/IPsec, SSTP." },
 				{ question: "POP3", port: "Port 110", title: "Post Office Protocol v3", answer: "Télécharge les messages électroniques d’un serveur vers un client, généralement avec suppression sur le serveur : la version sécurisée POP3S ajoute un chiffrement SSL/TLS indispensable pour la confidentialité." },
 				{ question: "IMAP4", port: "Port 143", title: "Internet Message Access Protocol v4", answer: "Permet de gérer ses emails directement sur le serveur, avec organisation en dossiers et consultation multi-terminaux. La version sécurisée IMAPS utilise SSL/TLS pour chiffrer les accès." },
-				{ question: "PAP", port: "PPP", title: "Password Authentication Protocol", answer: "Méthode simple d’authentification pour PPP : envoie le mot de passe en clair, exposé aux écoutes, et fortement déconseillé sans protection de chiffrement complémentaire (ex : tunnel VPN)." },
 				{ question: "PPPoE", port: "Couche 2", title: "PPP over Ethernet", answer: "Encapsule PPP dans des trames Ethernet pour fournir l’accès haut débit aux fournisseurs d’accès Internet (ADSL, fibre), intégrant l’authentification et la gestion dynamique des sessions réseau." },
 				{ question: "UPnP", port: "Port 1900", title: "Universal Plug and Play", answer: "Facilite la découverte automatique, l’installation et la configuration des périphériques réseau (imprimantes, caméras, box multimédia) ; attention, il peut ouvrir des failles si mal sécurisé." },
 				{ question: "WAP", port: "Variable", title: "Wireless Application Protocol", answer: "Protocole pionnier pour l’accès Internet sur mobiles à ressources limitées ; adapte les mêmes contenus pour voyager sur des réseaux sans fil, notamment dans l’Internet pré-smartphones." },
-				{ question: "SSTP", port: "Port 443", title: "Secure Socket Tunneling Protocol", answer: "VPN Microsoft exploitant HTTPS (SSL/TLS) pour traverser firewall et NAT et offrir une connexion chiffrée robuste, recommandé en environnement Windows moderne." },
-				{ question: "SNMP", port: "Port 161", title: "Simple Network Management Protocol", answer: "Standard dédié à la surveillance, la gestion et l’automatisation des équipements réseau : collecte métriques, envoie des alertes et peut modifier les paramètres à distance selon les profils d’accès." },
+                { question: "SNMP", port: "Port 161", title: "Simple Network Management Protocol", answer: "Standard dédié à la surveillance, la gestion et l’automatisation des équipements réseau : collecte métriques, envoie des alertes et peut modifier les paramètres à distance selon les profils d’accès." },
 				{ question: "SIP", port: "Port 5060", title: "Session Initiation Protocol", answer: "Déclenche, modifie et termine des sessions multimédia : voix, vidéo, messagerie instantanée. Fondamental en VoIP, il négocie les ressources et permet l’intégration avec d’autres applications de communication." },
 				{ question: "NTP", port: "Port 123", title: "Network Time Protocol", answer: "Synchronise précisément l’heure système d’un appareil sur le réseau, indispensable pour la cohérence des logs, la sécurité et le fonctionnement correct des applications distribuées." },
 				{ question: "NFS", port: "Port 2049", title: "Network File System", answer: "Partage de fichiers au sein d’un réseau permettant le montage distant des espaces disque. Centralise le stockage pour les systèmes UNIX/Linux, supportant la collaboration et la sauvegarde simplifiée." },
@@ -481,6 +528,14 @@
             ],
             network: [
 				// Couche 2 – Liaison / Data Link
+                { question: "Couche 1", port: "Physique", title: "Modèle OSI - Physique", answer: "Définit les caractéristiques électriques, optiques et mécaniques du support. Transmet les bits bruts sur le support physique." },
+                { question: "Couche 2", port: "Liaison de données", title: "Modèle OSI - Liaison", answer: "Encapsule les paquets en trames, délimite les transmissions, détecte et corrige les erreurs. Protocoles : Ethernet, PPP." },
+                { question: "Couche 3", port: "Réseau", title: "Modèle OSI - Réseau", answer: "Achemine les paquets en fonction des adresses IP, gère le routage, le contrôle de congestion et le découpage en fragments. Protocoles : IP, ICMP, OSPF." },
+                { question: "Couche 4", port: "Transport", title: "Modèle OSI - Transport", answer: "Assure la livraison fiable de bout en bout avec ordonnancement des segments, contrôle de flux et correction d’erreurs. Protocoles : TCP, UDP." },
+                { question: "Couche 5", port: "Session", title: "Modèle OSI - Session", answer: "Gère l’ouverture, la gestion et la terminaison des sessions entre applications. Garantit les dialogues synchronisés entre utilisateurs." },
+                { question: "Couche 6", port: "Présentation", title: "Modèle OSI - Présentation", answer: "Assure la traduction des formats de données entre systèmes hétérogènes, ainsi que le chiffrement/déchiffrement et la compression/décompression." },
+                { question: "Couche 7", port: "Application", title: "Modèle OSI - Application", answer: "Fournit des services à l’utilisateur final (transfert de fichiers, messagerie, terminaux virtuels). Protocole typique : HTTP, FTP, SMTP." },
+                { question: "Trame Ethernet", port: "Couche liaison (2)", title: "Structure d'une trame", answer: "Contient en-tête et données : Préambule (synchronisation), Adresse MAC destination, Adresse MAC source, Type/Longueur (type du protocole de couche supérieure, ex : IPv4), Données (payload), Contrôle FCS (CRC pour détection d’erreurs)." },
 				{ question: "ARP", port: "Couche 2", title: "Address Resolution Protocol", answer: "Protocole fondamental permettant d'associer une adresse IP à une adresse MAC physique dans un réseau local, facilitant ainsi la communication entre les machines du même segment réseau." },
 				{ question: "OUI", port: "Adresse MAC", title: "Organizationally Unique Identifier", answer: "Identifiant unique de 3 octets qui précède toute adresse MAC, attribué aux fabricants pour garantir l'unicité des adresses des équipements réseau." },
                 { question: "Classe A", port: "IPv4", title: "Classe A", answer: "Plage d'adresses IPv4 allant de 0.0.0.0 à 127.255.255.255, avec un masque par défaut de 255.0.0.0. Les adresses Classe A sont destinées aux très grands réseaux, avec 8 bits pour le réseau et 24 bits pour les hôtes. Le préfixe binaire commence par 0." },
@@ -495,12 +550,7 @@
 				{ question: "Native VLAN", port: "Trunking", title: "VLAN natif", answer: "VLAN par défaut sur une liaison trunk, dont les trames ne sont pas étiquetées, permettant la compatibilité avec des équipements ne supportant pas le marquage VLAN." },
 				{ question: "CDP", port: "Couche 2", title: "Cisco Discovery Protocol", answer: "Protocole propriétaire Cisco permettant la découverte automatique des équipements réseau Cisco voisins et l'échange d'informations de configuration." },
 				{ question: "LLDP", port: "Couche 2", title: "Link Layer Discovery Protocol", answer: "Protocole ouvert standardisé pour la découverte des équipements réseau voisins, facilitant la topologie et la gestion réseau multi-fournisseurs." },
-				{ question: "STP", port: "Couche 2", title: "Spanning Tree Protocol", answer: "Protocole permettant d'éliminer les boucles réseau dans un environnement avec redondance en désactivant dynamiquement certains liens tout en assurant la disponibilité." },
-				{ question: "RSTP", port: "IEEE 802.1w", title: "Rapid Spanning Tree Protocol", answer: "Version améliorée et accélérée de STP permettant une convergence réseau plus rapide lors de changements topologiques." },
-				{ question: "PVST+", port: "Cisco", title: "Per-VLAN Spanning Tree Plus", answer: "Implémentation Cisco de STP avec un arbre couvrant distinct pour chaque VLAN, optimisant la redondance et les performances par VLAN." },
-				{ question: "VTP", port: "Couche 2", title: "VLAN Trunking Protocol", answer: "Protocole Cisco utilisé pour synchroniser automatiquement la configuration des VLANs entre plusieurs commutateurs dans un domaine." },
-				{ question: "DTP", port: "Couche 2", title: "Dynamic Trunk Protocol", answer: "Protocole Cisco facilitant la négociation automatique des liens trunk entre commutateurs, simplifiant la configuration réseau." },
-			
+				
 				// Couche 2.5 – MPLS
 				{ question: "MPLS", port: "Couche 2.5", title: "Multiprotocol Label Switching", answer: "Technique de commutation basée sur l'attribution d'étiquettes aux paquets pour un routage efficace, flexible et rapide au-delà de la couche réseau classique." },
 			
@@ -516,7 +566,8 @@
 				{ question: "OSPF", port: "Routage", title: "Open Shortest Path First", answer: "Protocole de routage à état de liens qui utilise l'algorithme de Dijkstra pour construire le chemin le plus court et permet une bonne scalabilité." },
 				{ question: "EIGRP", port: "Routage", title: "Enhanced Interior Gateway Routing Protocol", answer: "Protocole de routage hybride Cisco combinant les avantages du vecteur de distance et de l'état des liens pour une convergence rapide et efficace." },
 				{ question: "Distance Administrative", port: "Routage", title: "Administrative Distance", answer: "Métrique qui classe la fiabilité des différentes sources de routage, où plus la valeur est faible, plus la source est fiable (ex : 0 pour connexion directe)." },
-			
+                { question: "Spanning Tree Protocol", port: "Réseau", title: "STP", answer: "Protocole de couche 2 permettant d’éviter les boucles dans une topologie réseau commutée. Il désactive certains liens redondants et réactive dynamiquement des chemins de secours en cas de panne." },
+
 				// Couche 4 – Transport
 				{ question: "TCP", port: "Couche 4", title: "Transmission Control Protocol", answer: "Protocole de transport garantissant la fiabilité, l'ordre des paquets, le contrôle de flux et la correction d'erreurs entre hôtes." },
 				{ question: "UDP", port: "Couche 4", title: "User Datagram Protocol", answer: "Protocole léger de transport sans connexion, rapide mais sans garantie de livraison ni ordre, idéal pour le streaming ou les applications temps réel." },
@@ -559,8 +610,7 @@
 				{ question: "MDT", port: "Déploiement", title: "Microsoft Deployment Toolkit", answer: "Outil Microsoft facilitant la création d'images système personnalisées et l'automatisation du déploiement de Windows sur plusieurs machines." },
 				{ question: "WDS", port: "Déploiement", title: "Windows Deployment Services", answer: "Service permettant de déployer des images Windows sur des ordinateurs via le réseau utilisant PXE, simplifiant l'installation en masse." },
 				{ question: "SVCMM", port: "Gestion", title: "System Center Virtual Machine Manager", answer: "Outil de Microsoft pour gérer, déployer et optimiser des environnements virtualisés Hyper-V dans les centres de données." },
-				{ question: "FSRM", port: "Gestion", title: "File Server Resource Manager", answer: "Outils de Windows Server permettant de contrôler, classer et gérer les quotas d’espace sur les partages réseau et serveurs de fichiers." },
-			
+				
 				// Virtualisation / haute disponibilité
 				{ question: "Hyper-V", port: "Virtualisation", title: "Hyper-V", answer: "Hyperviseur de type 1 natif de Windows permettant de créer, gérer et exécuter des machines virtuelles pour supporter la consolidation des serveurs et les tests d'environnements." },
 				{ question: "NLB", port: "Équilibrage", title: "Network Load Balancing", answer: "Mécanisme de répartition de charge réseau entre plusieurs serveurs pour assurer la disponibilité et améliorer la scalabilité des applications." },
@@ -628,8 +678,6 @@
 				{ question: "Swap", port: "Mémoire", title: "Espace d'échange", answer: "Partition ou fichier disque utilisé pour étendre la mémoire vive en déchargeant temporairement les données moins utilisées, évitant ainsi les plantages par manque de RAM." },
 				{ question: "File Permissions", port: "Sécurité", title: "Permissions fichiers", answer: "Système de gestion des droits d’accès (lecture, écriture, exécution) attribués à chaque fichier/dossier pour les utilisateurs, groupes et autres." },
 				{ question: "Inode", port: "Système fichiers", title: "Index Node", answer: "Structure de données contenant les métadonnées d’un fichier ou dossier (propriétaire, permissions, taille, dates) mais pas le contenu lui-même." },
-				{ question: "cgroups", port: "Isolation", title: "Control Groups", answer: "Fonctionnalité du kernel limitant, isolant et surveillant l’usage des ressources (CPU, mémoire, I/O) de groupes de processus, facilitant la gestion des ressources et conteneurs." },
-				{ question: "namespaces", port: "Isolation", title: "Linux Namespaces", answer: "Mécanisme de virtualisation légère isolant espace de noms de processus, réseau, utilisateurs, permettant la création de conteneurs avec des environnements séparés." }
 			],
             Securite: [
 				// Normes et cadre
@@ -684,21 +732,13 @@
 				{ question: "vSwitch", port: "Réseau", title: "Virtual Switch", answer: "Commutateur virtuel configuré dans l’hyperviseur pour gérer, contrôler et acheminer le trafic réseau entre machines virtuelles et réseau physique." },
 				{ question: "Port Group", port: "Réseau", title: "Groupe de ports", answer: "Ensemble de ports virtuels partageant les mêmes paramètres réseau et politiques, facilitant la gestion centralisée du réseau des machines virtuelles." },
 				{ question: "VLAN", port: "Réseau", title: "Virtual LAN", answer: "Segmentation logique du réseau au niveau des commutateurs virtuels et physiques, isolant le trafic pour la sécurité et la performance." },
-				{ question: "Resource Pool", port: "Ressources", title: "Pool de ressources", answer: "Regroupement logique de ressources CPU et mémoire dans vSphere, permettant de gérer et allouer les ressources aux machines virtuelles de façon centralisée." },
-				{ question: "Affinity Rule", port: "Placement", title: "Règle d'affinité", answer: "Règles définissant où une VM doit ou ne doit pas s’exécuter, par exemple pour garder des VMs ensemble ou les séparer sur différents hôtes." },
 				{ question: "Fault Tolerance", port: "Tolérance", title: "FT", answer: "Fonctionnalité assurant une protection continue en exécutant une VM secondaire synchrone sur un autre hôte, garantissant zéro temps d’arrêt en cas de panne." },
-				{ question: "vApp", port: "Application", title: "Virtual Application", answer: "Conteneur logique regroupant plusieurs machines virtuelles formant une application complète, facilitant leur déploiement et gestion en groupe." },
 				{ question: "OVF", port: "Format", title: "Open Virtualization Format", answer: "Format standard ouvert pour empaqueter et distribuer des machines virtuelles et applications virtuelles de manière portable et interopérable." },
 				{ question: "vCPU", port: "Processeur", title: "Virtual CPU", answer: "Processeur virtuel assigné à une VM, mappé sur les cœurs physiques du serveur hôte pour assurer la puissance de calcul nécessaire." },
-				{ question: "Memory Balloon", port: "Mémoire", title: "Ballon mémoire", answer: "Technique permettant à l’hyperviseur de récupérer dynamiquement de la mémoire inutilisée dans une VM pour optimiser la distribution globale des ressources." },
-				{ question: "TPS", port: "Mémoire", title: "Transparent Page Sharing", answer: "Mécanisme deduplication mémoire entre VMs permettant de partager les pages mémoire identiques pour améliorer l’efficacité de la mémoire physique." },
 				{ question: "VMDK", port: "Fichier", title: "Virtual Machine Disk", answer: "Format de fichier propriétaire VMware représentant les disques virtuels utilisés par les machines virtuelles pour stocker leurs données." },
 				{ question: "Thick Provision", port: "Stockage", title: "Provisionnement épais", answer: "Méthode d’allocation de disque où tout l’espace disque demandé est réservé immédiatement lors de la création de la VM." },
 				{ question: "Thin Provision", port: "Stockage", title: "Provisionnement léger", answer: "Méthode d’allocation de disque où l’espace est alloué dynamiquement en fonction de l’utilisation réelle, optimisant l’espace de stockage." },
-				{ question: "Hot Add", port: "Extension", title: "Ajout à chaud", answer: "Capacité à ajouter des ressources (CPU, mémoire, disque) à une VM en fonctionnement sans nécessiter son arrêt." },
-				{ question: "CBT", port: "Sauvegarde", title: "Changed Block Tracking", answer: "Technologie VMware permettant le suivi des blocs modifiés des disques virtuels, optimisant ainsi les processus de sauvegarde incrémentale." },
 				{ question: "Storage vMotion", port: "Migration", title: "Storage vMotion", answer: "Migration à chaud des fichiers de disque virtuel d’une VM entre différents datastores sans interruption du service." },
-				{ question: "Admission Control", port: "Contrôle", title: "Contrôle d'admission", answer: "Politique qui garantit la disponibilité des ressources nécessaires dans un cluster pour assurer la redondance et éviter la surcharge en cas de panne." },
 				{ question: "VMware Tools", port: "Pilotes", title: "VMware Tools", answer: "Suite de pilotes et d’utilitaires installée dans la VM pour optimiser ses performances, la gestion, les interactions avec l’hyperviseur et l’expérience utilisateur." }
             ],
             storage: [
@@ -731,7 +771,6 @@
 				{ question: "SAS", port: "Interface", title: "Serial Attached SCSI", answer: "Interface de connexion série haute performance pour disques et contrôleurs, couramment utilisée dans les serveurs et datacenters." },
 				{ question: "SATA", port: "Interface", title: "Serial ATA", answer: "Interface série standard principalement utilisée pour les disques durs et SSD dans les ordinateurs personnels et serveurs légers." },
 				{ question: "SCSI", port: "Interface", title: "Small Computer System Interface", answer: "Ancienne interface parallèle utilisée pour connecter des périphériques de stockage hautes performances dans les serveurs." },
-				{ question: "FC-AL", port: "Topologie", title: "Fibre Channel Arbitrated Loop", answer: "Topologie Fibre Channel en boucle partagée pouvant connecter jusqu'à 126 périphériques de stockage ou serveurs dans un SAN." }
 			],
             Gestion_de_projet: [
 				// Rôles et responsabilités
@@ -751,7 +790,73 @@
 			
 				// Coûts et optimisation
 				{ question: "TCO", port: "Coût total", title: "Total Cost of Ownership", answer: "Estimation globale des coûts liés à l’acquisition, l’exploitation, la maintenance et la fin de vie d’un actif ou service, permettant d’évaluer sa rentabilité sur le long terme." }
-			]
+			],
+            schemas: [
+                { 
+                    question: "Protocole Kerberos", 
+                    port: "Port 88", 
+                    title: "Authentification Kerberos", 
+                    answer: "", 
+                    isSchema: true,
+                    schema: `
+                        <div class="kerberos-flow">
+                            <div class="flow-phase">
+                                <div class="flow-phase-title">-- 1-2: Authentification initiale --</div>
+                                <div class="flow-exchanges">
+                                    <div class="flow-exchange">
+                                        <span class="flow-entity">Client</span>
+                                        <span class="flow-description">Demande TGT</span>
+                                        <span class="flow-arrow-horizontal">  →</span>
+                                        <span class="flow-entity">AS</span>
+                                    </div>
+                                    <div class="flow-exchange">
+                                        <span class="flow-entity">AS</span>
+                                        <span class="flow-arrow-horizontal">  →</span>
+                                        <span class="flow-description">TGT + clé</span>
+                                        <span class="flow-entity">Client</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flow-phase">
+                                <div class="flow-phase-title">-- 3-4: Demande de service --</div>
+                                <div class="flow-exchanges">
+                                    <div class="flow-exchange">
+                                        <span class="flow-entity">Client</span>
+                                        <span class="flow-description">TGT + service</span>
+                                        <span class="flow-arrow-horizontal">  →</span>
+                                        <span class="flow-entity">TGS</span>
+                                    </div>
+                                    <div class="flow-exchange">
+                                        <span class="flow-entity">TGS</span>
+                                        <span class="flow-arrow-horizontal">  →</span>
+                                        <span class="flow-description">Ticket service</span>
+                                        <span class="flow-entity">Client</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flow-phase">
+                                <div class="flow-phase-title">-- 5-6: Accès au service --</div>
+                                <div class="flow-exchanges">
+                                    <div class="flow-exchange">
+                                        <span class="flow-entity">Client</span>
+                                        <span class="flow-description">Présente ticket</span>
+                                        <span class="flow-arrow-horizontal">  →</span>
+                                        <span class="flow-entity">Serveur</span>
+                                    </div>
+                                    <div class="flow-exchange">
+                                        <span class="flow-entity">Serveur</span>
+                                        <span class="flow-arrow-horizontal">  →</span>
+                                        <span class="flow-description">Accès autorisé</span>
+                                        <span class="flow-entity">Client</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `
+                }
+            ]
         };
         let currentCategory = '';
         let currentCards = [];
@@ -831,10 +936,11 @@
                 network: 'Réseaux', 
                 windows: 'Windows',
                 linux: 'Linux',
-                Securite: 'Securite',
+                Securite: 'Sécurité',
                 vmware: 'VMware',
                 storage: 'Stockage',
-                Gestion_de_projet: 'Gestion de projet'
+                Gestion_de_projet: 'Gestion de projet',
+                schemas: 'Schémas'
             };
             return names[category] || category;
         }
@@ -885,7 +991,7 @@
                 filteredCards = baseCards.filter(card => 
                     card.question.toLowerCase().includes(searchTerm) ||
                     card.title.toLowerCase().includes(searchTerm) ||
-                    card.answer.toLowerCase().includes(searchTerm)
+                    (card.answer && card.answer.toLowerCase().includes(searchTerm))
                 );
             } else {
                 filteredCards = baseCards;
@@ -924,9 +1030,30 @@
 
             // Update card content
             document.getElementById('card-question').textContent = card.question;
-            document.getElementById('card-port').textContent = card.port;
-            document.getElementById('card-title').textContent = card.title;
-            document.getElementById('card-answer').textContent = card.answer;
+            
+            // Gérer le contenu (texte ou schéma)
+            const answerElement = document.getElementById('card-answer');
+            const schemaElement = document.getElementById('card-schema');
+            const portElement = document.getElementById('card-port');
+            const titleElement = document.getElementById('card-title');
+            
+            if (card.isSchema && card.schema) {
+                // Pour les schémas : masquer port, titre et texte
+                portElement.style.display = 'none';
+                titleElement.style.display = 'none';
+                answerElement.style.display = 'none';
+                schemaElement.style.display = 'flex';
+                schemaElement.innerHTML = card.schema;
+            } else {
+                // Pour les cartes normales : afficher tout
+                portElement.style.display = 'block';
+                titleElement.style.display = 'block';
+                portElement.textContent = card.port;
+                titleElement.textContent = card.title;
+                answerElement.style.display = 'block';
+                schemaElement.style.display = 'none';
+                answerElement.textContent = card.answer;
+            }
 
             // Update counter and progress
             document.getElementById('counter').textContent = `Carte ${currentCardIndex + 1} sur ${currentCards.length}`;
@@ -964,12 +1091,6 @@
                 const j = Math.floor(Math.random() * (i + 1));
                 [currentCards[i], currentCards[j]] = [currentCards[j], currentCards[i]];
             }
-            currentCardIndex = 0;
-            showCard();
-        }
-
-        function resetProgress() {
-            currentCards = [...cardData[currentCategory]];
             currentCardIndex = 0;
             showCard();
         }
@@ -1017,8 +1138,8 @@
         // Initialisation
         document.addEventListener('DOMContentLoaded', function() {
             initializeAllCards();
-            console.log('Application de cartes IT chargée');
+            console.log('Application de cartes IT chargée avec schémas');
         });
     </script>
 </body>
-</html>
+</html> 
